@@ -1,0 +1,160 @@
+body {
+    overflow: hidden;
+    background-color: #eeeeee00;
+  }
+
+  /* Media query for screens with a maximum width of 1000px */
+  @media (max-width: 1000px) {
+    /* Overriding the overflow property to 'visible' */
+    body {
+      overflow: auto; /* or overflow: auto; to only show scrollbar when needed */
+    }
+  }
+  /* CSS to center the preloader */
+  .preloader {
+    z-index: 1000000000001;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    background-color: rgba(255, 255, 255, 0.7); /* Optional: semi-transparent background */
+  }
+
+  /* Style for the preloader image */
+  .preloader img {
+    max-width: 400px; /* Adjust size as needed */
+    max-height: 400px; /* Adjust size as needed */
+  }
+
+  @media (max-width: 475px) {
+    .preloader img {
+    max-width: 300px; /* Adjust size as needed */
+    max-height: 300px; /* Adjust size as needed */
+  }
+
+  }
+
+
+  .sidebar-item {
+  list-style: none;
+}
+  .sidebar-item span{
+  margin: 0 5px;
+}
+.sidebar-link {
+  text-decoration: none;
+  color: #000; /* Adjust color as needed */
+}
+.sidebar-link:hover {
+  color: #007bff; /* Change color on hover as needed */
+}
+
+.left-sidebar{
+  z-index: 100001; 
+  font-size: 16px;
+}
+.mobile{
+ position: fixed;
+ left : 0;
+ top : 0;
+ width: 100%;
+ height: 100%;
+ display: none;
+}
+#sidebarnav{
+  position: relative; 
+  top: -90px; 
+  z-index: 10001;
+}
+.admin-picture {
+  width: 100px; /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto; /* Center the image */
+}
+.admin-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mobile .admin-picture {
+  width: 100px; /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto; /* Center the image */
+}
+.mobile .admin-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.Pagewrapper{
+  position: absolute;
+  left: 0; 
+  width: 83.5%;
+}
+/* Media query for screens with a width of 1169px or below */
+  @media (max-width: 1473px) {
+    .Pagewrapper{
+      width: 80%;
+    }
+  }
+
+  @media (max-width: 1169px) {
+    .admin-picture {
+      width: 50px; /* Adjusted size for smaller screens */
+      height: 50px; /* Adjusted size for smaller screens */
+    }
+  }
+
+/* Media query for screens with a width of 869px or below */
+  @media (max-width: 869px) {
+    .Pagewrapper{
+      width: 90%;
+    }
+  }
+
+/* Media query for screens with a width of 869px or below */
+  @media (max-width: 768px) {
+    .Pagewrapper{
+      width: 100%;
+    }
+    .left-sidebar{
+      display: none;
+  }
+}
+
+.admin-role {
+  font-size: 16px; /* Adjust font size as needed */
+  color: #9999996f; /* Adjust color as needed */
+  text-align: center; /* Center the role text */
+}
+
+  .calendar {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+  }
+  .calendar th,
+  .calendar td {
+    border: 1px solid #ccc;
+    padding: 10px 5px;
+    text-align: center;
+  }
+  .calendar th {
+    background-color: #f2f2f2;
+  }
+  .calendar td {
+    cursor: pointer;
+  }
+  .today {
+    background-color: #eeeeee;
+  }
