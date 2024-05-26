@@ -1,4 +1,4 @@
-<form id="adminForm">   
+<form id="Form">   
     <div class="row" dir="ltr">
 
        <div class="col-md-6" dir="rtl">
@@ -59,6 +59,15 @@
                       id="name"
                       placeholder="اسم المستخدم"
                     />
+                    <input 
+                      name="position" 
+                      value="{{ isset($data)? $data->position : 0 }}"
+                      type="text"
+                      class="form-control"
+                      id="position"
+                      style="display:none;"
+                    />
+
                   </div>
                 </div>
                 <div class="form-group row">

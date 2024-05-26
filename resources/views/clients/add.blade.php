@@ -2,21 +2,32 @@
 
 @section('content')
 
-<div class="row">
+        <div class="row">
             <div class="col-md-12" dir="rtl">
                 <div class="row">
                 <div class="col-md-12">
                     <div class="card">
 
-                    @include('clients.form')
+                        @include('clients.form')
 
-                </div>      
-               </div>
+                        
+                        <div id="errorMessages" class="alert alert-danger hide"></div>
+
+                        <button type="button" id="submitFormButton" class="btn btn-primary m-2 w-25" data-table="clients" data-view="clients.index">
+                            حفظ البيانات
+                        </button>
+
+                   </div>      
+                </div>
               </div>
            </div>
-           <button type="button" class="btn btn-primary m-2">
-            حفظ البيانات
-        </button>
-</div>
+
+
+@include('modals.successAdd')
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+@include('js.create')
 
 @endsection

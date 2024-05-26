@@ -26,3 +26,5 @@ Route::get('/edit', [App\Http\Controllers\CRUD\UpdateController::class, 'edit'])
 Route::post('/create', [App\Http\Controllers\CRUD\CreateController::class, 'create'])->name('create');
 Route::post('/update', [App\Http\Controllers\CRUD\UpdateController::class, 'update'])->name('update');
 Route::post('/delete', [App\Http\Controllers\CRUD\DeleteController::class, 'delete'])->name('delete');
+Route::post('/search', [App\Http\Controllers\CRUD\SearchController::class, 'search'])->name('search');
+

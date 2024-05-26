@@ -27,26 +27,21 @@
                                   </div>
                               </div>
                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group row">
-                                        <label
-                                            for="fname"
-                                            class="col-sm-3 text-end control-label col-form-label">العميل</label>
-                                        <div class="col-md-9">
-                                          <select
-                                            class="select2 form-select shadow-none"
-                                            style="width: 100%; height: 36px">
-                                          <option>اختر العميل</option>
-                                          <option>السيد سمير</option>
-                                          <option>احمد عمر</option>
-                                          <option>محمد عبد الرحمن</option>
-                                          <option>اسلام خالد</option>
-                                          <option>احمد ابو الهنا</option>
-                                          <option>رامي دحروج</option>
-                                          </select>
-                                        </div>
-                                      </div> 
+                               
+                              <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label for="fname" class="col-sm-3 text-end control-label col-form-label">العميل</label>
+                                    <div class="col-md-9">
+                                        <select id="clientSelect" name="client_id" class="select2 form-select shadow-none" style="width: 100%; height: 36px">
+                                            <option value="">اختر العميل</option>
+                                            @foreach ($withData as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
+                            </div>
+
                                 <div class="col-md-4">
                                     <div class="form-group row">
                                         <label

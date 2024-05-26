@@ -8,15 +8,30 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\ModelHelperTrait;
 
 class CreateController extends Controller
 {
+    use ModelHelperTrait;
 
     public function add(Request $request)
     {
         $view = $request->view;
-        return view($view);
+        $withData =[];
+
+        if($view == "offers.add"){
+        
+        // Determine the model class based on the table name
+        $modelClass = $this->getModelClass("clients");
+    
+        if ($modelClass) {
+        // Eager load relationships based on the model class
+        $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+        }
     }
+
+        return view($view, compact('withData'));
+}
 
 
     public function create(Request $request)
@@ -31,7 +46,7 @@ class CreateController extends Controller
             $rules['name'] = ['required' ,'string' ,'max:255'];
         }
         if ($request->has('phone')) {
-            $rules['phone'] = ['required' ,'string' ,'min:11' , 'max:11' , 'unique:users'];
+            $rules['phone'] = ['required' ,'string' ,'min:11' , 'max:11' , 'unique:' . $table];
         }
         if ($request->has('password')) {
             $rules['password'] = ['required', 'string','min:8','confirmed'];
@@ -99,7 +114,6 @@ class CreateController extends Controller
     
         // Insert data into database using DB facade
         $record = DB::table($table)->insert(array_merge($requestData, [
-            "position" => 0,
             'created_at' => now(),
             'updated_at' => now(),
         ]));

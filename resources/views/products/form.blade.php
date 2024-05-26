@@ -1,7 +1,17 @@
-              <form class="form-horizontal">
+              <form class="form-horizontal" id="Form">
                         <div class="card-body">
                             <h3 class="card-title"> بيانات المنتج</h3>
                             <div class="row">
+
+                            @if(isset($data))
+                            <input 
+                                class="hide"
+                                name="id" 
+                                value="{{ $data->id }}"
+                                id="id"
+                                />
+                            @endif
+
                                 <div class="col-md-4">
                                     <div class="form-group row">
                                         <label
@@ -10,6 +20,8 @@
                                             >الاسم</label>
                                         <div class="col-sm-9">
                                             <input
+                                            name = "name"
+                                            value="{{ isset($data)? $data->name : '' }}"
                                             type="text"
                                             class="form-control"
                                             id="fname"
@@ -26,6 +38,8 @@
                                         >السعر</label>
                                     <div class="col-sm-9">
                                         <input
+                                        name = "price"
+                                        value="{{ isset($data)? $data->price : '' }}"
                                         type="text"
                                         class="form-control"
                                         id="lname"
@@ -42,6 +56,8 @@
                                         >الكمية</label>
                                         <div class="col-sm-9">
                                         <input
+                                        name = "quantity"
+                                        value="{{ isset($data)? $data->quantity : '' }}"
                                         type="text"
                                         class="form-control"
                                         id="lname"

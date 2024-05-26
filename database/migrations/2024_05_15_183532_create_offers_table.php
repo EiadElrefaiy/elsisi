@@ -18,6 +18,7 @@ class CreateOffersTable extends Migration
             $table->string('offer_num');
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('represenative_id');
+            $table->decimal('total', 10, 2);
             $table->decimal('payed', 10, 2);
             $table->integer('state');
             $table->integer('financial_state');

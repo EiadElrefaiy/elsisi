@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<button type="button" id="submitFormButton" class="btn btn-primary m-2 w-25 hide" data-table="users"></button>
 
 <div class="row">
     <div class="col-md-12">
@@ -15,7 +16,7 @@
                             <div class="input-group-append">
                                 <span class="input-group-text" style="padding: 9.5px;" id="basic-addon2"><i class=" fas fa-search"></i></span>
                             </div>
-                            <input type="text" class="form-control" placeholder="بحث" aria-label="Recipient 's username" aria-describedby="basic-addon2" />
+                            <input id="searchInput" type="text" class="form-control" placeholder="بحث" aria-label="Recipient 's username" aria-describedby="basic-addon2" />
                         </div>
                     </div>
                     <div class="col-6 mt-2" dir="ltr">
@@ -66,100 +67,86 @@
     </div>
 </div>
 
-<!-- Confirm deletion modal -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+@include('modals.confirmDelete')
 
-    <div class="d-flex justify-content-between align-items-center w-100 p-3">
-        <h5 class="modal-title mb-0" id="confirmDeleteModalLabel">تأكيد الحذف</h5>
-        <button dir="ltr" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-            
-            <div class="modal-body">
-                <p>هل أنت متأكد أنك تريد حذف هذا السجل؟</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteButton">تأكيد الحذف</button>
-            </div>
-        </div>
-    </div>
-</div>
+@include('modals.successDelete')
 
-
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-        <div class="d-flex justify-content-between align-items-center w-100 p-3">
-          <h5 class="modal-title mb-0" id="confirmDeleteModalLabel">تأكيد الحذف</h5>
-          <button dir="ltr" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-             
-            <div class="modal-body">
-                <p id="successMessage"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
+     @include('js.index')
+
 <script>
-      // Function to show the confirm deletion modal
-      function showConfirmDeleteModal(id, table) {
-        $('#confirmDeleteButton').data('id', id); // Set data-id attribute on the confirm delete button
-        $('#confirmDeleteButton').data('table', table); // Set data-table attribute on the confirm delete button
-        $('#confirmDeleteModal').modal('show'); // Show the modal
+         // Function to handle search
+    function search() {
+        var query = $('#searchInput').val();
+        var tableName = $('#submitFormButton').data('table');
+        
+        $.ajax({
+            url: '{{ route("search") }}',
+            type: 'POST',
+            data: {
+                query: query,
+                table: tableName,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Handle successful search results
+                console.log(response.results);
+                
+                if (response.results) {
+                    // Clear existing table rows
+                    $('.customtable').empty();
+
+                    // Append new rows to the table
+                    response.results.forEach(function(item) {
+                        var imageUrl = item.image ? '{{ Storage::url('public/') }}' + item.image : '{{ URL::asset('assets/images/businessman.png') }}';
+                        var position = item.position == 1 ? 'ادمن' : 'مشرف';
+
+                        var row = '<tr id="dataRow_' + item.id + '">' +
+                                    '<td><img src="' + imageUrl + '" alt="user" width="70" height="70" class="rounded-circle" /></td>' +
+                                    '<td>' + item.name + '</td>' +
+                                    '<td>' + item.phone + '</td>' +
+                                    '<td>' + position + '</td>' +
+                                    '<td>' +
+                                        '<a style="color: #3e5569;" href="{{ route('edit', ['view' => 'management.edit', 'table' => 'users', 'id' => '']) }}' + item.id + '">' +
+                                            '<i class="mdi mdi-grease-pencil"></i>' +
+                                        '</a>&nbsp;&nbsp;' +
+                                        '<a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal(\'' + item.id + '\', \'users\')">' +
+                                            '<i class="mdi mdi-delete"></i>' +
+                                        '</a>' +
+                                    '</td>' +
+                                  '</tr>';
+                        $('.customtable').append(row);
+                    });
+                } else {
+                    alert('No results found.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error status:', status); // Log the error status
+                console.log('Error response:', xhr.responseText); // Log the error response
+                if (xhr.status === 404) {
+                    // Clear existing table rows
+                    $('.customtable').empty();
+                    
+                    var row = '<tr>' +
+                                    '<td class="text-center" colspan="5">' + "لا توجد نتائج" + '</td>' +
+                                  '</tr>';
+                        $('.customtable').append(row);
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        });
     }
 
-    $(document).ready(function() {
-      // Function to handle deletion when confirm delete button is clicked
-      $('#confirmDeleteButton').on('click', function() {
-          var id = $(this).data('id');
-          var table = $(this).data('table');
-          var rowToDelete = $('#dataRow_' + id); // Find the row to delete using its ID
-          console.log(id);
-          console.log(table);
-          $.ajax({
-              type: 'POST',
-              url: '{{ route('delete') }}',
-              data: {
-                  id: id,
-                  table: table,
-                  _token: '{{ csrf_token() }}'
-              },
-              success: function(response) {
-                  showSuccessMessage(response.message);
-                  // Hide the row after successful deletion
-                  rowToDelete.hide(); // Hide the row
-              },
-              error: function(xhr, status, error) {
-                  showErrorMessage('حدثت مشكلة أثناء الحذف. يرجى المحاولة مرة أخرى.');
-                  console.error(xhr.responseText);
-              }
-          });
-          $('#confirmDeleteModal').modal('hide'); // Hide the modal after deletion
-      });
-
-      // Function to show the success message modal
-      function showSuccessMessage(message) {
-          $('#successMessage').text(message);
-          $('#successModal').modal('show');
-      }
-
-      // Function to show the error message modal
-      function showErrorMessage(message) {
-          $('#errorMessage').text(message);
-          $('#errorModal').modal('show');
-      }
+    // Trigger search on any key press in the search input field
+    $('#searchInput').on('keyup', function(e) {
+        search();
     });
 
-</script>
+     </script>
 
 @endsection
