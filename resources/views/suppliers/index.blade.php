@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+<button type="button" id="submitFormButton" class="btn btn-primary m-2 w-25 hide" data-table="suppliers"></button>
 <div class="col-md-12">
         <div class="card">
             <div class="card-body">
@@ -16,6 +16,7 @@
                       ><i class=" fas fa-search"></i></span>
                   </div>
                   <input
+                    id="searchInput"
                     type="text"
                     class="form-control"
                     placeholder="بحث"
@@ -43,52 +44,119 @@
                   </tr>
                 </thead>
                 <tbody class="customtable">
-                  <tr>
-                    <td>سمير السيد سمير</td>
-                    <td>01064009414</td>
-                    <td>منطقة المعصرة اخر مصنع الصيد</td>
-                    <td><span class="badge bg-success">خالص</span></td>
-                    <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'suppliers.edit']) }}"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
+                @foreach ($data as $item)
+                  <tr id="dataRow_{{ $item->id }}">
+                    <td>{{ $item->name }}</td>
+                    <td>{{ $item->phone }}</td>
+                    <td>{{ $item->address }}</td>
+
+                    <td>
+                        {!! $item->invoices->sum("total") == $item->invoices->sum("payed") ? '<span class="badge bg-success">خالص</span>' : '<span class="badge bg-warning">متبقي</span>' !!}
+                    </td>
+                    
+                    <td> 
+                    <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'suppliers.edit','table' => 'suppliers' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp;
+                      <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'suppliers')">
+                          <i class="mdi mdi-delete"></i>
+                      </a>
+                   </td>
                   </tr>
-                  <tr>
-                    <td>سمير السيد سمير</td>
-                    <td>01064009414</td>
-                    <td>منطقة المعصرة اخر مصنع الصيد</td>
-                    <td><span class="badge bg-success">خالص</span></td>
-                    <td><a style="color: #3e5569;" href="supplier_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>سمير السيد سمير</td>
-                    <td>01064009414</td>
-                    <td>منطقة المعصرة اخر مصنع الصيد</td>
-                    <td><span class="badge bg-success">خالص</span></td>
-                    <td><a style="color: #3e5569;" href="supplier_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>سمير السيد سمير</td>
-                    <td>01064009414</td>
-                    <td>منطقة المعصرة اخر مصنع الصيد</td>
-                    <td><span class="badge bg-warning">متبقي</span></td>
-                    <td><a style="color: #3e5569;" href="supplier_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>سمير السيد سمير</td>
-                    <td>01064009414</td>
-                    <td>منطقة المعصرة اخر مصنع الصيد</td>
-                    <td><span class="badge bg-success">خالص</span></td>
-                    <td><a style="color: #3e5569;" href="supplier_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>سمير السيد سمير</td>
-                    <td>01064009414</td>
-                    <td>منطقة المعصرة اخر مصنع الصيد</td>
-                    <td><span class="badge bg-warning">متبقي</span></td>
-                    <td><a style="color: #3e5569;" href="supplier_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                  </tr>
+                  @endforeach
                 </tbody>
               </table>
             </div>
           </div>
       </div>
 </div>
+
+
+
+@include('modals.confirmDelete')
+
+@include('modals.successDelete')
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+@include('js.index')
+
+<script>
+    // Function to handle search
+    function search() {
+        var query = $('#searchInput').val();
+        var tableName = $('#submitFormButton').data('table');
+
+        $.ajax({
+            url: '{{ route("search") }}',
+            type: 'POST',
+            data: {
+                query: query,
+                table: tableName,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Handle successful search results
+                console.log(response.results);
+                
+                if (response.results) {
+                          // Clear existing table rows
+                          $('.customtable').empty();
+
+                          // Append new rows to the table
+                          response.results.forEach(function(item) {
+                              var row = '<tr id="dataRow_' + item.id + '">' +
+                                            '<td>' + item.name + '</td>' +
+                                            '<td>' + item.phone + '</td>' +
+                                            '<td>' + item.address + '</td>' +
+                                            '<td>' +
+                                                (item.invoices.total == item.invoices.payed ?
+                                                    '<span class="badge bg-success">خالص</span>' :
+                                                    '<span class="badge bg-warning">متبقي</span>') +
+                                            '</td>' +
+                                            '<td>' +
+                                                '<a style="color: #3e5569;" href="{{ route('edit', ['view' => 'suppliers.edit', 'table' => 'suppliers']) }}/' + item.id + '">' +
+                                                    '<i class="mdi mdi-grease-pencil"></i>' +
+                                                '</a>&nbsp;&nbsp;' +
+                                                '<a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal(\'' + item.id + '\', \'suppliers\')">' +
+                                                    '<i class="mdi mdi-delete"></i>' +
+                                                '</a>' +
+                                            '</td>' +
+                                        '</tr>';
+                              $('.customtable').append(row);
+                          });
+                      }
+                      else {
+                    // Clear existing table rows
+                    $('.customtable').empty();
+                    
+                    var row = '<tr>' +
+                                    '<td class="text-center" colspan="4">لا توجد نتائج</td>' +
+                                  '</tr>';
+                    $('.customtable').append(row);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error status:', status); // Log the error status
+                console.log('Error response:', xhr.responseText); // Log the error response
+                if (xhr.status === 404) {
+                    // Clear existing table rows
+                    $('.customtable').empty();
+                    
+                    var row = '<tr>' +
+                                    '<td class="text-center" colspan="4">لا توجد نتائج</td>' +
+                                  '</tr>';
+                        $('.customtable').append(row);
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        });
+    }
+
+    // Trigger search on any key press in the search input field
+    $('#searchInput').on('keyup', function(e) {
+        search();
+    });
+</script>
+
 @endsection

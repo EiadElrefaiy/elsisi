@@ -5,27 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class InvoiceItem extends Model
+class Returns extends Model
 {
     use HasFactory;
 
+    protected $table = 'returns';
     protected $fillable = [
-        'invoice_id',
-        'product_id',
         'price',
         'quantity',
+        'offer_id', // Foreign key included in fillable
+        'product_id', // Foreign key included in fillable
     ];
 
-    // Define the relationship with the Invoice model
-    public function invoice()
+    // Define the relationship with the Offer model
+    public function offer()
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Offer::class);
     }
-
+    
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
-
 
 }

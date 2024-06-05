@@ -25,4 +25,19 @@ class Product extends Model
         return $this->belongsToMany(Offer::class, 'offer_items');
     }
 
+    public function items()
+    {
+        return $this->hasMany(OfferItem::class);
+    }
+
+    public function returns()
+    {
+        return $this->hasMany(Returns::class);
+    }
+
+    public function invoice_items()
+    {
+        return $this->hasMany(OfferItem::class);
+    }
+
 }

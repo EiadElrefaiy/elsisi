@@ -11,21 +11,30 @@ class Offer extends Model
 
     protected $fillable = [
         'offer_num',
-        'offer_date',
+        'name',
+        'client_id',
+        'represenative_id',
+        'total',
+        'payed',
         'state',
-        'client_id', // Foreign key included in fillable
+        'financial_state',
+        'notes',
+        'created_at',
     ];
 
-    // Define the relationship with the Client model
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
-    // Define the relationship with the Supplier model
     public function items()
     {
         return $this->hasMany(OfferItem::class);
+    }
+
+    public function returns()
+    {
+        return $this->hasMany(Returns::class);
     }
 
     public function products()
@@ -33,11 +42,9 @@ class Offer extends Model
         return $this->belongsToMany(Product::class, 'offer_items');
     }
 
-    public function representatives()
+    public function representative()
     {
-        return $this->belongsToMany(Representative::class, 'delivery')
-                    ->using(Delivery::class)
-                    ->withTimestamps();
+        return $this->belongsTo(Representative::class);
     }
 
 }

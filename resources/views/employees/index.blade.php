@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<button type="button" id="submitFormButton" class="btn btn-primary m-2 w-25 hide" data-table="employees"></button>
 
 <div class="row">
 
@@ -18,6 +19,7 @@
                ><i class=" fas fa-search"></i></span>
            </div>
            <input
+             id="searchInput"
              type="text"
              class="form-control"
              placeholder="بحث"
@@ -46,53 +48,111 @@
            </tr>
          </thead>
          <tbody class="customtable">
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>01064009414</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>2500</td>
-             <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'employees.edit']) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
+         @foreach ($data as $item)
+         <tr id="dataRow_{{ $item['id'] }}">
+             <td>{{$item->name}}</td>
+             <td>{{$item->phone}}</td>
+             <td>{{$item->address}}</td>
+             <td>{{$item->salary}}</td>
+             <td>      
+                  <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'employees.edit' , 'table' => 'employees' , 'id' => $item['id'] ]) }}">
+                    <i class="mdi mdi-grease-pencil"></i>
+                  </a>&nbsp;&nbsp;
+                  <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item['id'] }}', 'employees')">
+                    <i class="mdi mdi-delete"></i>
+                  </a>
+              </td>
            </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>01064009414</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>2500</td>
-             <td><a style="color: #3e5569;" href="employee_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>01064009414</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>2500</td>
-             <td><a style="color: #3e5569;" href="employee_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>01064009414</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>2500</td>
-             <td><a style="color: #3e5569;" href="employee_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>01064009414</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>2500</td>
-             <td><a style="color: #3e5569;" href="employee_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>01064009414</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>2500</td>
-             <td><a style="color: #3e5569;" href="employee_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
+         @endforeach
          </tbody>
        </table>
      </div>
    </div>
   </div>
  </div>
+
+
+ 
+ @include('modals.confirmDelete')
+
+ @include('modals.successDelete')
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+     @include('js.index')
+
+<script>
+         // Function to handle search
+    function search() {
+        var query = $('#searchInput').val();
+        var tableName = $('#submitFormButton').data('table');
+        
+        $.ajax({
+            url: '{{ route("search") }}',
+            type: 'POST',
+            data: {
+                query: query,
+                table: tableName,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Handle successful search results
+                console.log(response.results);
+                
+                if (response.results) {
+                    // Clear existing table rows
+                    $('.customtable').empty();
+
+                    // Append new rows to the table
+                    response.results.forEach(function(item) {
+                        var imageUrl = item.image ? '{{ Storage::url('public/') }}' + item.image : '{{ URL::asset('assets/images/businessman.png') }}';
+                        var position = item.position == 1 ? 'ادمن' : 'مشرف';
+
+                        var row = '<tr id="dataRow_' + item.id + '">' +
+                                    '<td>' + item.name + '</td>' +
+                                    '<td>' + item.phone + '</td>' +
+                                    '<td>' + item.address + '</td>' +
+                                    '<td>' + item.salary + '</td>' +
+                                    '<td>' +
+                                        '<a style="color: #3e5569;" href="{{ route('edit', ['view' => 'employees.edit', 'table' => 'employees', 'id' => '']) }}' + item.id + '">' +
+                                            '<i class="mdi mdi-grease-pencil"></i>' +
+                                        '</a>&nbsp;&nbsp;' +
+                                        '<a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal(\'' + item.id + '\', \'employees\')">' +
+                                            '<i class="mdi mdi-delete"></i>' +
+                                        '</a>' +
+                                    '</td>' +
+                                  '</tr>';
+                        $('.customtable').append(row);
+                    });
+                } else {
+                    alert('No results found.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error status:', status); // Log the error status
+                console.log('Error response:', xhr.responseText); // Log the error response
+                if (xhr.status === 404) {
+                    // Clear existing table rows
+                    $('.customtable').empty();
+                    
+                    var row = '<tr>' +
+                                    '<td class="text-center" colspan="5">' + "لا توجد نتائج" + '</td>' +
+                                  '</tr>';
+                        $('.customtable').append(row);
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        });
+    }
+
+    // Trigger search on any key press in the search input field
+    $('#searchInput').on('keyup', function(e) {
+        search();
+    });
+
+     </script>
 
  @endsection

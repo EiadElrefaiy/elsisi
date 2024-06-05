@@ -14,6 +14,7 @@ class Representative extends Model
         'phone',
         'address',
         'password',
+        'created_at',
     ];
 
     protected $hidden = [
@@ -38,6 +39,11 @@ class Representative extends Model
         return $this->belongsToMany(Offer::class, 'delivery')
                     ->using(Delivery::class)
                     ->withTimestamps();
+    }
+
+    public function deliveries()
+    {
+        return $this->hasMany(Delivery::class);
     }
 
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+<button type="button" id="submitFormButton" class="btn btn-primary m-2 w-25 hide" data-table="representatives"></button>
 <div class="row">
  <div class="col-md-12">
   <div class="card">
@@ -17,6 +17,7 @@
                ><i class=" fas fa-search"></i></span>
            </div>
            <input
+             id="searchInput"
              type="text"
              class="form-control"
              placeholder="بحث"
@@ -24,14 +25,14 @@
              aria-describedby="basic-addon2"
            />
          </div>    
-
        </div>
        <div class="col-6 mt-2" dir="ltr">
          <div class="input-group" dir="rtl">
              <input
                type="text"
+               id="datePicker"
                class="form-control mydatepicker"
-               placeholder="mm/dd/yyyy"
+               placeholder="mm-dd-yyyy"
              />
              <div class="input-group-append">
                <span class="input-group-text h-100"
@@ -49,56 +50,58 @@
              <th scope="col">الايرادات</th>
              <th scope="col">المصروفات</th>
              <th scope="col">الاجمالي</th>
+             <th scope="col">التاريخ</th>
              <th scope="col"></th>
            </tr>
          </thead>
          <tbody class="customtable">
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>16510</td>
-             <td>1000</td>
-             <td>15510</td>
-             <td><a style="color: #3e5569;" href="{{ route('index', ['table' => 'representatives', 'view' => 'representatices_days.day']) }}"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>16510</td>
-             <td>1000</td>
-             <td>15510</td>
-             <td><a style="color: #3e5569;" href="day_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>16510</td>
-             <td>1000</td>
-             <td>15510</td>
-             <td><a style="color: #3e5569;" href="day_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>16510</td>
-             <td>1000</td>
-             <td>15510</td>
-             <td><a style="color: #3e5569;" href="day_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>16510</td>
-             <td>1000</td>
-             <td>15510</td>
-             <td><a style="color: #3e5569;" href="day_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"></i></a></td>
-           </tr>
-           <tr>
-             <td>سمير السيد سمير</td>
-             <td>16510</td>
-             <td>1000</td>
-             <td>15510</td>
-             <td><a style="color: #3e5569;" href="day_info.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"></i></a></td>
-           </tr>
+           @include('representatices_days.tableRows')
          </tbody>
        </table>
      </div>
    </div>
   </div>
  </div>
- @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+@include('js.index')
+
+<script>
+    $(document).ready(function(){
+        $('#searchInput').on('input', function() {
+            var searchText = $(this).val().toLowerCase();
+            $('.customtable tr').each(function() {
+                var rowData = $(this).text().toLowerCase();
+                if (rowData.indexOf(searchText) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+
+        $('#datePicker').on('change', function() {
+            var selectedDate = $(this).val();
+            // Format the selected date to match the server's expected format (YYYY-MM-DD)
+            var formattedDate = formatDate(selectedDate);
+            // Hide all table rows
+            $('.customtable tr').hide();
+            // Show table rows with matching date
+            $('.customtable tr').each(function() {
+                var rowData = $(this).find('td:eq(4)').text(); // Assuming the date is in the 5th column
+                if (rowData === formattedDate) {
+                    $(this).show();
+                }
+            });
+        });
+
+        // Function to format date (MM/DD/YYYY to YYYY-MM-DD)
+        function formatDate(date) {
+            var parts = date.split('/');
+            return parts[2] + '-' + parts[0] + '-' + parts[1];
+        }
+    });
+</script>
+@endsection

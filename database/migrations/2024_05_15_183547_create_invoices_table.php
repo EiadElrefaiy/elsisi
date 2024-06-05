@@ -17,8 +17,9 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->string('invoice_num');
             $table->unsignedBigInteger('supplier_id');
-            $table->date('invoice_date');
+            $table->string('image')->nullable();
             $table->decimal('payed', 10, 2);
+            $table->decimal('total', 10, 2);
             $table->string('state');
             $table->timestamps();
 

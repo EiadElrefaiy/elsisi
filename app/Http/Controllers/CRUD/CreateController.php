@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use App\Traits\ModelHelperTrait;
 
 class CreateController extends Controller
@@ -18,19 +19,65 @@ class CreateController extends Controller
     {
         $view = $request->view;
         $withData =[];
+        $withData2 =[];
+
+        if($view == "delivery.add"){
+        
+        // Determine the model class based on the table name
+        $modelClass = $this->getModelClass("representatives");
+        $modelClass2 = $this->getModelClass("offers");
+    
+        if ($modelClass) {
+        // Eager load relationships based on the model class
+        $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+        $withData2 = $modelClass2::with($this->getRelationships($modelClass2))->get();
+        }
+        
+        return view($view, compact('withData' , 'withData2'));
+    }
 
         if($view == "offers.add"){
         
         // Determine the model class based on the table name
         $modelClass = $this->getModelClass("clients");
+        $modelClass2 = $this->getModelClass("products");
     
         if ($modelClass) {
         // Eager load relationships based on the model class
         $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+        $withData2 = $modelClass2::with($this->getRelationships($modelClass2))->get();
         }
+        return view($view, compact('withData' , 'withData2'));
     }
 
+        if($view == "invoices.add"){
+        
+        // Determine the model class based on the table name
+        $modelClass = $this->getModelClass("suppliers");
+        $modelClass2 = $this->getModelClass("products");
+    
+        if ($modelClass) {
+        // Eager load relationships based on the model class
+        $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+        $withData2 = $modelClass2::with($this->getRelationships($modelClass2))->get();
+        }
+        return view($view, compact('withData' , 'withData2'));
+    }
+
+        if($view == "returns.add"){
+        
+        // Determine the model class based on the table name
+        $modelClass = $this->getModelClass("offers");
+    
+        if ($modelClass) {
+        // Eager load relationships based on the model class
+        $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+        
+        }
         return view($view, compact('withData'));
+    }
+
+        return view($view);
 }
 
 
@@ -48,6 +95,13 @@ class CreateController extends Controller
         if ($request->has('phone')) {
             $rules['phone'] = ['required' ,'string' ,'min:11' , 'max:11' , 'unique:' . $table];
         }
+        if ($request->has('address')) {
+            $rules['address'] = ['required' ,'string'];
+        }
+
+        if ($request->has('salary')) {
+            $rules['salary'] = ['required'];
+        }
         if ($request->has('password')) {
             $rules['password'] = ['required', 'string','min:8','confirmed'];
             $rules['password_confirmation'] = ['required','string','min:8'];
@@ -56,14 +110,33 @@ class CreateController extends Controller
             $rules['image'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'];
         }
 
+        if ($request->has('offer_id')) {
+            $rules['offer_id'] = ['required'];
+        }
+        
+        if ($request->has('representative_id')) {
+            $rules['representative_id'] = ['required'];
+        }
+        
+        if ($request->hasFile('line')) {
+            $rules['line'] = ['required','string'];
+        }
+
+        if ($request->hasFile('price')) {
+            $rules['price'] = ['required'];
+        }
+
+
         $messages = [
             'name.required' => 'الاسم مطلوب.',
+            'address.required' => 'العنوان مطلوب.',
+            'salary.required' => 'الراتب مطلوب.',
             'name.string' => 'الاسم يجب أن يكون نصًا.',
             'name.max' => 'الاسم لا يمكن أن يتجاوز 255 حرفًا.',
             'phone.required' => 'رقم التليفون مطلوب.',
             'phone.string' => 'رقم التليفون يجب أن يكون نصًا.',
             'phone.max' => 'رقم التليفون لا يمكن أن يتجاوز 11 رقما.',
-            'phone.max' => 'رقم التليفون لا يمكن أن يقل عن 11 رقما.',
+            'phone.min' => 'رقم التليفون لا يمكن أن يقل عن 11 رقما.',
             'phone.unique' => 'رقم التليفون مسجل مسبقًا.',
             'password.required' => 'كلمة السر مطلوبة.',
             'password.string' => 'كلمة السر يجب أن تكون نصًا.',
@@ -74,7 +147,14 @@ class CreateController extends Controller
             'password_confirmation.min' => 'تأكيد كلمة السر يجب أن تكون على الأقل 8 أحرف.',
             'image.image' => 'الملف يجب أن يكون صورة.',
             'image.mimes' => 'الصورة يجب أن تكون بامتداد: jpeg, png, jpg, gif, svg.',
-            'image.max' => 'الصورة لا يمكن أن تتجاوز 2 ميغابايت.'
+            'image.max' => 'الصورة لا يمكن أن تتجاوز 2 ميغابايت.',
+            'offer_id.required' => 'رقم العرض مطلوب.',  
+            'representative_id.required' => 'المندوب مطلوب.',  
+            'line.required' => 'خط السير مطلوب.',  
+            'line.string' => 'خط السير يجب أن يكون نصًا.', 
+            'price.required' => 'السعر مطلوب.',  
+            'offer_id.not_in' => 'رقم العرض مطلوب.',
+            'representative_id.not_in' => 'المندوب مطلوب.',
         ];
                 
         // Create a validator instance and validate the request
@@ -125,6 +205,6 @@ class CreateController extends Controller
         $data = DB::table($table)->find($lastInsertedId);
     
         // Return success response
-        return response()->json(['status'=>true , "message"=>"تم اضافة المشرف بنجاح"], 201);
+        return response()->json(['status'=>true , 'data'=> $data], 201);
     }
 }

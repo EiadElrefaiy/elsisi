@@ -10,24 +10,7 @@
        <div class="col-sm-6 col-6">
          <h3 class="card-title">العروض</h3>
        </div>
-     <div class="col-6" dir="ltr">
-         <div class="input-group" dir="rtl">
-           <div class="input-group-append">
-             <span class="input-group-text" style="padding: 9.5px;" id="basic-addon2"
-               ><i class=" fas fa-search"></i></span>
-           </div>
-           <input
-             type="text"
-             class="form-control"
-             placeholder="بحث"
-             aria-label="Recipient 's username"
-             aria-describedby="basic-addon2"
-           />
-         </div>    
 
-       </div>
-      </div>
-     </div>
      <div class="table-responsive">
        <table class="table">
          <thead class="thead-light">
@@ -45,45 +28,35 @@
            </tr>
          </thead>
          <tbody class="customtable">
-           <tr>
-             <td>2701</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>16000 ج</td>
-             <td>20-04-2024</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>16000 ج</td>
-             <td>20-04-2024</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>منطقة المعصرة اخر مصنع الصيد</td>
-             <td>16000 ج</td>
-             <td>20-04-2024</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-           </tr>
+         @php
+           $totalSum = 0;
+         @endphp
+         @foreach ($data as $item)
+         @foreach ($item->deliveries as $delivery)
+             @php
+             if (Illuminate\Support\Str::contains($delivery->created_at, $formattedDate)){
+              $totalSum += $delivery->offer->total;
+             }
+             @endphp
+             @if (Illuminate\Support\Str::contains($delivery->created_at, $formattedDate))
+                <tr id="dataRow_{{$item->id}}">
+                    <td>{{$delivery->offer->offer_num}}</td>
+                    <td>{{$delivery->representative->name}}</td>
+                    <td>{{$delivery->offer->client->name}}</td>
+                    <td>{{$delivery->offer->client->phone}}</td>
+                    <td>{{$delivery->offer->client->state}}</td>
+                    <td>{{$delivery->offer->client->address}}</td>
+                    <td>{{$delivery->offer->total}} ج</td>
+                    <td>{{$delivery->offer->created_at->format('Y-m-d')}}</td>
+                    <td>{{$delivery->created_at->format('Y-m-d')}}</td>
+                    <td>{{$delivery->line}}</td>
+                </tr>
+            @endif
+           @endforeach
+         @endforeach
            <tr>
              <td colspan="9">الاجمالي</td>
-             <td>32000 ج</td>
+             <td>{{$totalSum}} ج</td>
            </tr>
          </tbody>
        </table>
@@ -106,36 +79,37 @@
    <div class="table-responsive">
        <table class="table">
          <thead class="thead-light">
-           <tr>
+             <tr id="dataRow_{{$item->id}}">
              <th scope="col">الوصف</th>
              <th scope="col">المبلغ</th>
              <th scope="col">التاريخ</th>
            </tr>
          </thead>
          <tbody class="customtable">
+         @php
+           $totalRevenueSum = 0;
+         @endphp
+         @foreach ($data as $item)
+           @foreach ($item->money->where("operation" , "revenue") as $revenue)
+             @php
+             if (Illuminate\Support\Str::contains($revenue->created_at, $formattedDate)){
+              $totalRevenueSum += $revenue->price;
+             }
+             @endphp
+
+             @if (Illuminate\Support\Str::contains($revenue->created_at, $formattedDate))
            <tr>
-             <td>تسليم عرض رقم 2701</td>
-             <td>8500 ج</td>
-             <td>20-04-2024</td>
+             <td>{{$revenue->description}}</td>
+             <td>{{$revenue->price}} ج</td>
+             <td>{{$revenue->created_at->format('Y-m-d')}}</td>
          </tr>
-         <tr>
-           <td>تسليم عرض رقم 2701</td>
-           <td>8500 ج</td>
-           <td>20-04-2024</td>
-       </tr>
-       <tr>
-           <td>تسليم عرض رقم 2701</td>
-           <td>8500 ج</td>
-           <td>20-04-2024</td>
-       </tr>
-       <tr>
-           <td>كاش</td>
-           <td>400 ج</td>
-           <td>20-04-2024</td>
-       </tr>
+            @endif
+           @endforeach
+         @endforeach
+
        <tr>
            <td colspan="2">الاجمالي</td>
-           <td>8500 ج</td>
+           <td>{{$totalRevenueSum}} ج</td>
        </tr>
        </tbody>
        </table>
@@ -149,39 +123,40 @@
        </div>
    </div>
    <div class="table-responsive">
-       <table class="table">
+   <table class="table">
          <thead class="thead-light">
-           <tr>
-               <th scope="col">الوصف</th>
-               <th scope="col">المبلغ</th>
-               <th scope="col">التاريخ</th>
-             </tr>
-           </thead>
+             <tr id="dataRow_{{$item->id}}">
+             <th scope="col">الوصف</th>
+             <th scope="col">المبلغ</th>
+             <th scope="col">التاريخ</th>
+           </tr>
+         </thead>
          <tbody class="customtable">
+         @php
+           $totalExpenseSum = 0;
+         @endphp
+         @foreach ($data as $item)
+           @foreach ($item->money->where("operation" , "expense") as $expense)
+             @php
+             if (Illuminate\Support\Str::contains($expense->created_at, $formattedDate)){
+              $totalExpenseSum += $expense->price;
+             }
+             @endphp
+             @if (Illuminate\Support\Str::contains($expense->created_at, $formattedDate))
            <tr>
-               <td>بنزين</td>
-               <td>700 ج</td>
-               <td>20-04-2024</td>
-           </tr>
-           <tr>
-               <td>كارتة</td>
-               <td>35 ج</td>
-               <td>20-04-2024</td>
-           </tr>
-           <tr>
-               <td>مصروف</td>
-               <td>75 ج</td>
-               <td>20-04-2024</td>
-           </tr>
-           <tr>
-               <td colspan="2">الاجمالي</td>
-               <td>8500 ج</td>
-           </tr>    
-           <tr>
-             <td colspan="2">الاجمالي</td>
-             <td>450 ج</td>
-         </tr>  
-         </tbody>
+             <td>{{$expense->description}}</td>
+             <td>{{$expense->price}} ج</td>
+             <td>{{$expense->created_at->format('Y-m-d')}}</td>
+         </tr>
+            @endif
+           @endforeach
+         @endforeach
+
+       <tr>
+           <td colspan="2">الاجمالي</td>
+           <td>{{$totalExpenseSum}} ج</td>
+       </tr>
+       </tbody>
        </table>
      </div>
 
@@ -196,13 +171,13 @@
          <div class="card-body">
              <div class="row">
               <div class="col-md-4">
-                 <h3 class="card-title" style="margin-right: 10px;">الايرادات: 16510 ج</h3>
+                 <h3 class="card-title" style="margin-right: 10px;">الايرادات: {{$totalRevenueSum}} ج</h3>
               </div>
               <div class="col-md-4">
-                 <h3 class="card-title" style="margin-right: 10px;">المصروفات: 935 ج</h3>
+                 <h3 class="card-title" style="margin-right: 10px;">المصروفات: {{$totalExpenseSum}} ج</h3>
               </div>
               <div class="col-md-4">
-                 <h3 class="card-title" style="margin-right: 10px;">الاجمالي: 15510 ج</h3>
+                 <h3 class="card-title" style="margin-right: 10px;">الاجمالي: {{$totalRevenueSum - $totalExpenseSum}} ج</h3>
               </div>
             </div>      
          </div>

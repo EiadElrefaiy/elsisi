@@ -19,6 +19,7 @@ class CreateReturnsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
+            $table->string('notes')->nuallabe();
             $table->timestamps();
 
             $table->foreign('offer_id')->references('id')->on('offers')->onDelete('cascade');

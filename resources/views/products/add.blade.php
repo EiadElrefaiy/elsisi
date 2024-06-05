@@ -11,6 +11,7 @@
 
                     @include('products.form')
 
+                    <div id="errorMessages" class="alert alert-danger hide"></div>
 
                     <button type="button" id="submitFormButton" class="btn btn-primary m-2" data-table="products" data-view="products.index">
                           حفظ البيانات

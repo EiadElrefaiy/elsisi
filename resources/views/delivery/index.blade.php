@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<button type="button" id="submitFormButton" class="btn btn-primary m-2 w-25 hide" data-table="delivery"></button>
 
 <div class="row">
  <div class="col-md-12">
@@ -100,110 +101,270 @@
            </tr>
          </thead>
          <tbody class="customtable">
-           <tr>
-             <td>2701</td>
-             <td>عرض اليجانس ابيض</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-             <td>20000 ج</td>
-             <td>200 ج</td>
-             <td>20200 ج</td>
-             <td><span class="badge bg-success">تم التسليم</span></td>
-             <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'offer.edit']) }}"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="offer_info.html"><i class="mdi mdi-pencil"></i></a></td>
-             <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'delivery.edit']) }}"><i class="mdi mdi-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>عرض اليجانس ابيض</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-             <td>20000 ج</td>
-             <td>200 ج</td>
-             <td>20200 ج</td>
-             <td><span class="badge bg-success">تم التسليم</span></td>
-             <td><a style="color: #3e5569;" href="pages-invoice.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="offer_info.html"><i class="mdi mdi-pencil"></i></a></td>
-                                 <td><a style="color: #3e5569;" href="add_delivery.html"><i class="mdi mdi-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>عرض اليجانس ابيض</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-             <td>20000 ج</td>
-             <td>200 ج</td>
-             <td>20200 ج</td>
-             <td><span class="badge bg-warning">قيد الشحن</span></td>
-             <td><a style="color: #3e5569;" href="pages-invoice.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="offer_info.html"><i class="mdi mdi-pencil"></i></a></td>
-             <td><a style="color: #3e5569;" href="add_delivery.html"><i class="mdi mdi-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>عرض اليجانس ابيض</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-             <td>20000 ج</td>
-             <td>200 ج</td>
-             <td>20200 ج</td>
-             <td><span class="badge bg-warning">قيد الشحن</span></td>
-             <td><a style="color: #3e5569;" href="pages-invoice.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="offer_info.html"><i class="mdi mdi-pencil"></i></a></td>
-             <td><a style="color: #3e5569;" href="add_delivery.html"><i class="mdi mdi-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>عرض اليجانس ابيض</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-             <td>20000 ج</td>
-             <td>200 ج</td>
-             <td>20200 ج</td>
-             <td><span class="badge bg-success">تم التسليم</span></td>
-             <td><a style="color: #3e5569;" href="pages-invoice.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="offer_info.html"><i class="mdi mdi-pencil"></i></a></td>
-             <td><a style="color: #3e5569;" href="add_delivery.html"><i class="mdi mdi-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>عرض اليجانس ابيض</td>
-             <td>سمير السيد سمير</td>
-             <td>سيد عبد الرازق</td>
-             <td>01064009414</td>
-             <td>المنيا</td>
-             <td>20-04-2024</td>
-             <td>الصعيد</td>
-             <td>20000 ج</td>
-             <td>200 ج</td>
-             <td>20200 ج</td>
-             <td><span class="badge bg-danger">طلب مرفوض</span></td>
-             <td><a style="color: #3e5569;" href="pages-invoice.html"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="offer_info.html"><i class="mdi mdi-pencil"></i></a></td>
-             <td><a style="color: #3e5569;" href="add_delivery.html"><i class="mdi mdi-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td colspan="10">الاجمالي</td>
-             <td>32000 ج</td>
-           </tr>
+                                    @php
+                                        $totalAmount = 0;
+                                        $from_date = request('from_date');
+                                        $to_date = request('to_date');
+                                    @endphp
+                                    @foreach ($data as $item)
+                                        @php
+                                            $itemDate = $item->created_at->format('Y-m-d');
+                                            $showItem = true;
+
+                                            if ($from_date && $to_date) {
+                                                $showItem = ($itemDate >= $from_date && $itemDate <= $to_date);
+                                            }
+
+                                            if ($showItem) {
+                                                $totalAmount += $item->offer->total + $item->price;
+                                            }
+                                        @endphp
+
+                                        @if ($showItem)
+                                            <tr id="dataRow_{{ $item->id }}">
+                                                <td>{{ $item->offer->offer_num }}</td>
+                                                <td>{{ $item->offer->name }}</td>
+                                                <td>{{ $item->representative->name }}</td>
+                                                <td>{{ $item->offer->client->name }}</td>
+                                                <td>{{ $item->offer->client->phone }}</td>
+                                                <td>{{ $item->offer->client->state }}</td>
+                                                <td>{{ $itemDate }}</td>
+                                                <td>{{ $item->line }}</td>
+                                                <td>{{ $item->offer->total }} ج</td>
+                                                <td>{{ $item->price }} ج</td>
+                                                <td>{{ $item->offer->total + $item->price }} ج</td>
+                                                <td>
+                                                    <span class="badge {{ $item->offer->state == 0 ? 'bg-warning' : ($item->offer->state == 1 ? 'bg-success' : ($item->offer->state == 2 ? 'bg-danger' : '')) }}">
+                                                    {{ $item->offer->state == 0 ? 'قيد الشحن' : ($item->offer->state == 1 ? 'تم التسليم' : ($item->offer->state == 2 ? 'رفض الاستلام' : '')) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                <a style="color: #3e5569;" href="{{ route('offer_print', ['view' => 'offers.offer_print', 'table' => 'offers', 'id' => $item->offer->id ]) }}"><i class="mdi mdi-eye"></i></a>
+                                                  &nbsp;&nbsp;<a style="color: #3e5569;" href="{{ route('edit', ['view' => 'offers.edit', 'table' => 'offers' ,'id' => $item->offer->id ]) }}"><i class="mdi mdi-pencil"></i></a>
+                                                </td>
+                                                <td>
+
+                                                  <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'delivery.edit' , 'table' => 'delivery' ,'id' => $item->id ]) }}">
+                                                  <i class="mdi mdi-pencil"></i>
+                                                  </a>
+
+                                                  &nbsp;&nbsp;
+                                                  
+                                                  <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item['id'] }}', 'delivery')">
+                                                    <i class="mdi mdi-delete"></i>
+                                                   </a>
+
+                                                </td>
+                                            </tr>
+                                        @endif
+                                      @endforeach
+
+                                    <tr>
+                                      <td colspan="13">الاجمالي</td>
+                                      
+                                      <td>{{ $totalAmount }} ج</td>
+                                    </tr>
+
          </tbody>
        </table>
      </div>
    </div>
   </div>
  </div>
+
+
+
+@include('modals.confirmDelete')
+
+@include('modals.successDelete')
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+     @include('js.index')
+
+
+        <script>
+        // Function to handle static search
+        function search() {
+        var query = $('#searchInput').val().toLowerCase();
+        var fromDate = $('#from_date').val();
+        var toDate = $('#to_date').val();
+        var rows = $('.customtable tr');
+        var hasResults = false;
+
+        // Convert from_date and to_date to Date objects
+        var fromDateObj = fromDate ? new Date(fromDate) : null;
+        var toDateObj = toDate ? new Date(toDate) : null;
+
+        // Ensure dates are in the correct format (yyyy-mm-dd)
+        if (fromDateObj) fromDateObj.setHours(0, 0, 0, 0);
+        if (toDateObj) toDateObj.setHours(23, 59, 59, 999);
+
+        // Remove any existing "No results found" row
+        $('.no-results').remove();
+
+        rows.each(function() {
+            var row = $(this);
+            var match = false;
+            var dateMatch = true;
+
+            // Check each cell in the row for the query
+            row.find('td').each(function() {
+                var cell = $(this);
+                if (cell.text().toLowerCase().indexOf(query) !== -1) {
+                    match = true;
+                    return false; // Exit each() loop once a match is found
+                }
+            });
+
+            // Check the date range if from_date and to_date are not empty
+            if (fromDateObj || toDateObj) {
+                var dateCell = row.find('td.date-cell'); // Assuming the date is in a cell with class 'date-cell'
+                if (dateCell.length) {
+                    var rowDate = new Date(dateCell.text());
+                    rowDate.setHours(12, 0, 0, 0); // Adjust time to noon to avoid timezone issues
+
+                    if (fromDateObj && rowDate < fromDateObj) {
+                        dateMatch = false;
+                    }
+                    if (toDateObj && rowDate > toDateObj) {
+                        dateMatch = false;
+                    }
+                }
+            }
+
+            // Show or hide the row based on match and dateMatch status
+            if (match && dateMatch) {
+                row.show();
+                hasResults = true;
+            } else {
+                row.hide();
+            }
+        });
+
+        // If no results, show the 'No results found' row
+        if (!hasResults) {
+            $('.customtable').append('<tr class="no-results"><td class="text-center" colspan="10">لا توجد نتائج</td></tr>');
+        }
+    }
+
+    // Attach the search function to the search input and date pickers
+    $('#searchInput').on('input', search);
+    $('#from_date, #to_date').on('change', search);
+
+        // Trigger search on button click
+        $('#submitFormButton').on('click', function(e) {
+            search();
+        });
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var radios = document.querySelectorAll('input[name="offer_status"]');
+    var fromDateInput = document.getElementById('from_date');
+    var toDateInput = document.getElementById('to_date');
+
+    function search() {
+        var query = document.getElementById('searchInput').value.toLowerCase();
+        var fromDate = fromDateInput.value;
+        var toDate = toDateInput.value;
+        var selectedStatus = document.querySelector('input[name="offer_status"]:checked').value;
+        var rows = document.querySelectorAll('.customtable tr');
+        var hasResults = false;
+
+        // Convert from_date and to_date to Date objects
+        var fromDateObj = fromDate ? new Date(fromDate) : null;
+        var toDateObj = toDate ? new Date(toDate) : null;
+
+        // Ensure dates are in the correct format (yyyy-mm-dd)
+        if (fromDateObj) fromDateObj.setHours(0, 0, 0, 0);
+        if (toDateObj) toDateObj.setHours(23, 59, 59, 999);
+
+        // Remove any existing "No results found" row
+        var noResultsRow = document.querySelector('.no-results');
+        if (noResultsRow) {
+            noResultsRow.remove();
+        }
+
+        rows.forEach(function(row) {
+            var match = false;
+            var dateMatch = true;
+            var statusMatch = selectedStatus === 'all';
+
+            // Check each cell in the row for the query
+            row.querySelectorAll('td').forEach(function(cell) {
+                if (cell.textContent.toLowerCase().indexOf(query) !== -1) {
+                    match = true;
+                }
+            });
+
+            // Check the date range if from_date and to_date are not empty
+            if (fromDateObj || toDateObj) {
+                var dateCell = row.querySelector('.date-cell');
+                if (dateCell) {
+                    var rowDate = new Date(dateCell.textContent);
+                    rowDate.setHours(12, 0, 0, 0); // Adjust time to noon to avoid timezone issues
+
+                    if (fromDateObj && rowDate < fromDateObj) {
+                        dateMatch = false;
+                    }
+                    if (toDateObj && rowDate > toDateObj) {
+                        dateMatch = false;
+                    }
+                }
+            }
+
+            // Check the offer status if not "all"
+            if (selectedStatus !== 'all') {
+                var statusCell = row.querySelector('span.badge');
+                if (statusCell) {
+                    statusMatch = statusCell.textContent.trim() === getStatusText(selectedStatus);
+                }
+            }
+
+            // Show or hide the row based on match, dateMatch, and statusMatch
+            if (match && dateMatch && statusMatch) {
+                row.style.display = '';
+                hasResults = true;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // If no results, show the 'No results found' row
+        if (!hasResults) {
+            var table = document.querySelector('.customtable');
+            noResultsRow = document.createElement('tr');
+            noResultsRow.classList.add('no-results');
+            noResultsRow.innerHTML = '<td class="text-center" colspan="10">لا توجد نتائج</td>';
+            table.appendChild(noResultsRow);
+        }
+    }
+
+    function getStatusText(status) {
+        switch (status) {
+            case '0':
+                return 'قيد الشحن';
+            case '1':
+                return 'تم التسليم';
+            case '2':
+                return 'رفض الاستلام';
+            default:
+                return '';
+        }
+    }
+
+    // Attach the search function to the search input, date pickers, and radio buttons
+    document.getElementById('searchInput').addEventListener('input', search);
+    fromDateInput.addEventListener('change', search);
+    toDateInput.addEventListener('change', search);
+    radios.forEach(function(radio) {
+        radio.addEventListener('change', search);
+    });
+});
+       
+    </script>
+     
  @endsection

@@ -16,12 +16,14 @@ class CreateOffersTable extends Migration
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->string('offer_num');
+            $table->string('name');
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('represenative_id');
             $table->decimal('total', 10, 2);
             $table->decimal('payed', 10, 2);
             $table->integer('state');
             $table->integer('financial_state');
+            $table->string('notes')->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

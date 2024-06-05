@@ -4,7 +4,7 @@
 <div class="row">
             <!-- Column -->
             <div class="col-md-6 col-lg-2 col-xlg-3">
-              <a href="{{ route('index', ['table' => 'returns', 'view' => 'returnes.index']) }}">
+              <a href="{{ route('index', ['table' => 'returns', 'view' => 'returns.index']) }}">
                 <div class="card card-hover">
                   <div class="box bg-danger text-center">
                     <h1 class="font-light text-white">
@@ -17,7 +17,7 @@
             </div>
             <!-- Column -->
             <div class="col-md-6 col-lg-2 col-xlg-3">
-              <a href="{{ route('index', ['table' => 'delivery', 'view' => 'representatices_days.index']) }}">
+              <a href="{{ route('index', ['table' => 'representatives', 'view' => 'representatices_days.index']) }}">
                 <div class="card card-hover">
                   <div class="box bg-success text-center">
                     <h1 class="font-light text-white">

@@ -20,6 +20,7 @@
                      class="col-sm-3 text-end control-label col-form-label"
                      >من</label>
                      <input
+                       id="from_date"
                        type="text"
                        class="form-control mydatepicker"
                        placeholder="mm/dd/yyyy"
@@ -37,6 +38,7 @@
                      class="col-sm-3 text-end control-label col-form-label"
                      >الى</label>
                      <input
+                       id="to_date"
                        type="text"
                        class="form-control mydatepicker"
                        placeholder="mm/dd/yyyy"
@@ -49,14 +51,21 @@
                  </div>
                </div> 
            </div>
-           <div class="col-12" dir="ltr">
-             <a href="{{ route('add', ['view' => 'returnes.add']) }}" style="padding: 3px 15px;" type="button" class="btn btn-success text-white ">
+
+           <div class="col-6">
+           <a id="searchButton" href="javascript:void(0);" style="padding: 3px 15px;" type="button" class="btn btn-info text-white">
+               بحث
+           </a>
+           </div>
+
+           <div class="col-6" dir="ltr">
+             <a href="{{ route('add', ['view' => 'returns.add']) }}" style="padding: 3px 15px;" type="button" class="btn btn-success text-white">
                اضافة مرتجع &nbsp;<i class="mdi mdi-account-plus font-18"></i>
              </a>
            </div>
 
-            </div>
          </div>
+     </div>
      <div class="table-responsive">
        <table class="table">
          <thead class="thead-light">
@@ -66,50 +75,26 @@
              <th scope="col">السعر</th>
              <th scope="col">الكمية</th>
              <th scope="col">الاجمالي</th>
+             <th scope="col">التاريخ</th>
              <th scope="col"></th>
            </tr>
          </thead>
-         <tbody class="customtable">
-           <tr>
-             <td>2701</td>
-             <td>طقم حمام</td>
-             <td>3000 ج</td>
-             <td>10</td>
-             <td>3000 ج</td>
-             <td><a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
+         <tbody class="customtable" id="tableBody">
+         @foreach ($data as $item)
+            <tr id="dataRow_{{ $item->id }}" class="dataRow">
+             <td>{{$item->offer->offer_num}}</td>
+             <td>{{$item->product->name}}</td>
+             <td>{{$item->price}} ج</td>
+             <td>{{$item->quantity}}</td>
+             <td>{{$item->price * $item->quantity}} ج</td>
+             <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
+             <td>                      
+              <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'returns')">
+                  <i class="mdi mdi-delete"></i>
+              </a>
+              </td>
            </tr>
-           <tr>
-             <td>2701</td>
-             <td>طقم حمام</td>
-             <td>3000 ج</td>
-             <td>10</td>
-             <td>3000 ج</td>
-             <td><a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>طقم حمام</td>
-             <td>3000 ج</td>
-             <td>10</td>
-             <td>3000 ج</td>
-             <td><a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>طقم حمام</td>
-             <td>3000 ج</td>
-             <td>10</td>
-             <td>3000 ج</td>
-             <td><a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
-           <tr>
-             <td>2701</td>
-             <td>طقم حمام</td>
-             <td>3000 ج</td>
-             <td>10</td>
-             <td>3000 ج</td>
-             <td><a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-           </tr>
+           @endforeach
          </tbody>
        </table>
      </div>
@@ -117,4 +102,36 @@
   </div>
  </div>
 
- @endsection
+  @include('modals.confirmDelete')
+
+  @include('modals.successDelete')
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  @include('js.index')
+
+  <script>
+    $(document).ready(function() {
+        $('#searchButton').on('click', function() {
+            var from_date = $('#from_date').val();
+            var to_date = $('#to_date').val();
+
+            var fromDate = new Date(from_date);
+            var toDate = new Date(to_date);
+
+            $('.dataRow').each(function() {
+                var date = $(this).find('.date').text();
+                var rowDate = new Date(date);
+
+                if (rowDate >= fromDate && rowDate <= toDate) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+  </script>
+
+@endsection

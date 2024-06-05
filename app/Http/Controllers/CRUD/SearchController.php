@@ -23,7 +23,7 @@ class SearchController extends Controller
         if (!$modelClass) {
             return response()->json(['error' => 'Model not found'], 404);
         }
-
+    
         // Create an instance of the model
         $modelInstance = new $modelClass;
         
@@ -36,6 +36,12 @@ class SearchController extends Controller
         // Build the search conditions
         foreach ($columns as $column) {
             $searchQuery->orWhere($column, 'LIKE', '%' . $query . '%');
+        }
+        
+        // Include related models using eager loading
+        $relationships = $this->getRelationships($modelClass);
+        if (!empty($relationships)) {
+            $searchQuery->with($relationships);
         }
         
         // Execute the query

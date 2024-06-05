@@ -16,6 +16,8 @@ use App\Models\Product;
 use App\Models\Representative;
 use App\Models\Supplier;
 use App\Models\Procedure;
+use App\Models\Returns;
+use App\Models\Delivery;
 
 trait ModelHelperTrait
 {
@@ -38,10 +40,12 @@ trait ModelHelperTrait
             'money' => Money::class,
             'offers' => Offer::class,
             'offer_items' => OfferItem::class,
+            'returns' => Returns::class,
             'products' => Product::class,
             'representatives' => Representative::class,
             'suppliers' => Supplier::class,
             'procedures' => Procedure::class,
+            'delivery' => Delivery::class,
         ];
 
         return $models[$table] ?? null;
@@ -58,16 +62,18 @@ trait ModelHelperTrait
         $relationships = [
             Attendance::class => ['employee'],
             Client::class => ['offers'],
-            Employee::class => ['attendances', 'absences', 'rewards', 'discounts'],
+            Employee::class => ['attendances','procedures'],
             Invoice::class => ['supplier', 'items', 'products'],
             InvoiceItem::class => ['invoice'],
             Money::class => ['representative'],
-            Offer::class => ['client', 'items', 'products', 'representatives'],
+            Offer::class => ['client', 'items', 'products', 'representative' , 'returns'],
             OfferItem::class => ['offer'],
-            Product::class => ['invoices', 'offers'],
-            Representative::class => ['money', 'offers'],
+            Returns::class => ['offer' , 'product'],
+            Product::class => ['invoices', 'offers' , 'returns'],
+            Representative::class => ['money', 'offers' , 'deliveries'],
             Supplier::class => ['invoices'],
             Procedure::class => ['employee'],
+            Delivery::class => ['offer' , 'representative'],
             // Add other relationships here
         ];
 

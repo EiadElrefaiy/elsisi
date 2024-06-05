@@ -19,24 +19,89 @@ class UpdateController extends Controller
         $view = $request->view;
         $table = $request->table;
         $id = $request->id;
-
+    
         // Determine the model class based on the table name
         $modelClass = $this->getModelClass($table);
 
-        if ($modelClass) {
-            // Eager load relationships based on the model class
-            $data = $modelClass::with($this->getRelationships($modelClass))->find($id);
+        $data = $modelClass::with($this->getRelationships($modelClass))->find($id);
 
+    
+        if ($modelClass) {    
+
+            if($request->type == 1){
+                $data = $modelClass::with($this->getRelationships($modelClass))->with('items.product')->find($id);
+    
+                return response()->json(['status'=> true , 'data'=> $data], 201);
+            }
+
+            
+            if($view == "representatices_days.day"){
+                $date = $request->date;
+                $formattedDate = \Carbon\Carbon::parse($date)->format('Y-m-d');
+                
+                //dd($formattedDate);
+                $data = $modelClass::with($this->getRelationships($modelClass))->find($id)->get();
+                
+                return view($view, compact('data' , 'formattedDate'));
+            }
+
+
+            if($view == "delivery.edit"){
+                // Determine the model class based on the table name
+                $modelClass = $this->getModelClass("representatives");
+                $modelClass2 = $this->getModelClass("offers");
+            
+                if ($modelClass) {
+                // Eager load relationships based on the model class
+                $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+                $withData2 = $modelClass2::with($this->getRelationships($modelClass2))->get();
+                }
+                return view($view, compact('data' , 'withData' , 'withData2'));  
+            }
+        
+
+            if($view == "offers.edit"){ 
+            // Eager load relationships based on the model class
+            $data = $modelClass::with($this->getRelationships($modelClass))
+            ->with('items.product') // Eager load items and their related products
+            ->find($id);
+
+                $modelClass = $this->getModelClass("clients");
+                $modelClass2 = $this->getModelClass("products");
+                if ($modelClass) {
+                    $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+                    $withData2 = $modelClass2::with($this->getRelationships($modelClass2))->get();
+                }          
+                return view($view, compact('data' , 'withData' , 'withData2'));  
+            }
+
+            if($view == "invoices.edit"){ 
+            
+            // Eager load relationships based on the model class
+            $data = $modelClass::with($this->getRelationships($modelClass))
+            ->with('items.product') // Eager load items and their related products
+            ->find($id);
+
+                $modelClass = $this->getModelClass("suppliers");
+                $modelClass2 = $this->getModelClass("products");
+                if ($modelClass) {
+                    $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+                    $withData2 = $modelClass2::with($this->getRelationships($modelClass2))->get();
+                }          
+                return view($view, compact('data' , 'withData' , 'withData2'));  
+            }
+    
             // Return success response with the view and data
             return view($view, compact('data'));
         } else {
             // Handle the case where the model class is not found
             return response()->json(['error' => 'Model not found'], 404);
         }
-
+    
         return view($view, compact('data'));
     }
 
+    
     public function update(Request $request)
     {
         $table = $request->table;
@@ -110,6 +175,13 @@ class UpdateController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
+            if($table == "offers"){
+                DB::table("offer_items")->where("offer_id" , $data->id)->delete();
+                DB::table("returns")->where("offer_id" , $data->id)->delete();
+            }
+            if($table == "invoices"){
+                DB::table("invoice_items")->where("invoice_id" , $data->id)->delete();
+            }
         } else {
             return response()->json(['message' => 'not found'], 404);
         }

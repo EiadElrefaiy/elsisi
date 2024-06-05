@@ -17,6 +17,17 @@ class Delivery extends Pivot
         'representative_id',
         'line',
         'price',
+        'created_at',
     ];
+
+    public function representative()
+    {
+        return $this->belongsTo(Representative::class);
+    }
+
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class);
+    }
 
 }

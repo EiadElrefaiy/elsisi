@@ -21,21 +21,9 @@ class Employee extends Model
         {
             return $this->hasMany(Attendance::class);
         }
-    
-        // Define the relationship with the Attendance model
-        public function absences()
+            
+        public function procedures()
         {
-            return $this->hasMany(Absence::class);
-        }
-        
-        public function rewards()
-        {
-            return $this->hasMany(Reward::class);
-        }
-    
-        public function discounts()
-        {
-            return $this->hasMany(Discount::class);
-        }
-        
+            return $this->hasMany(Procedure::class);
+        }        
 }

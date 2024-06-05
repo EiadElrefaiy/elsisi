@@ -18,11 +18,53 @@ class ReadController extends Controller
     
         // Determine the model class based on the table name
         $modelClass = $this->getModelClass($table);
+
+        $money = $this->getModelClass("money");
     
         if ($modelClass) {
             // Eager load relationships based on the model class
             $data = $modelClass::with($this->getRelationships($modelClass))->get();
     
+            if ($view == "representatices_days.index") {
+                // Fetch all unique dates for which there is representative data
+                $uniqueDates = $money::selectRaw('DATE(created_at) as date')
+                    ->distinct()
+                    ->pluck('date')
+                    ->toArray();
+                
+                // Initialize an array to store the data for each date
+                $representativesByDate = [];
+        
+                // Loop through each unique date
+                foreach ($uniqueDates as $date) {
+                    // Fetch representatives with associated money data for the current date
+                    $representatives = $modelClass::with(['money' => function ($query) use ($date) {
+                        // Filter money records for the current date
+                        $query->whereDate('created_at', $date);
+                    }])
+                    ->whereHas('money', function ($query) use ($date) {
+                        // Check if money records exist for the current date
+                        $query->whereDate('created_at', $date);
+                    })
+                    ->get();
+        
+                    // Store the representatives data for the current date
+                    $representativesByDate[$date] = $representatives;
+                }
+         
+                // Pass the data to the view
+                return view($view, compact('representativesByDate'));
+            }
+        
+            if ($request->ajax() && $request->type == "day_search") {
+                $date = $request->input('date');
+                $formattedDate = \Carbon\Carbon::createFromFormat('m/d/Y', $date)->format('Y-m-d');
+        
+                $data = $modelClass::with($this->getRelationships($modelClass))->whereDate('created_at', $formattedDate)->get();
+        
+                return view('representatices_days.tableRows', compact('data'))->render();
+            }
+                        
             // Return success response with the view and data
             return view($view, compact('data'));
         } else {
@@ -46,12 +88,13 @@ class ReadController extends Controller
     public function offer_print(Request $request)
     {
         $table = $request->table;
+        $view = $request->view;
+        $id = $request->id;
 
-        // Get Record from the database
-        //$data = DB::table($table)->find($request->id);
-        $data = null;
+        $modelClass = $this->getModelClass($table);
+        $data = $modelClass::with($this->getRelationships($modelClass))->find($id);
 
         // Return success response
-        return view('offers.offer_print', compact('data'));
+        return view($view, compact('data'));
     }
 }

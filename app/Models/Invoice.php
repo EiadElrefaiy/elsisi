@@ -12,8 +12,11 @@ class Invoice extends Model
     protected $fillable = [
         'supplier_id',
         'invoice_num',
-        'invoice_date',
+        'image',
+        'payed',
         'state',
+        'total',
+        'created_at',
     ];
 
     // Define the relationship with the Supplier model

@@ -10,7 +10,9 @@
 
                     @include('delivery.form')
 
-                    <button type="button" class="btn btn-primary m-2">
+                    <div id="errorMessages" class="alert alert-danger hide"></div>
+
+                    <button type="button" id="submitFormButton" class="btn btn-primary m-2" data-table="delivery" data-view="delivery.index">
                             حفظ البيانات
                     </button>
                 
@@ -21,4 +23,27 @@
            </div>
 
         </div>
+        
+        @include('modals.successAdd')
+
+
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+        @include('js.create')
+
+        <script>
+                $(document).ready(function() {
+
+                $('#representativesDropdown').change(function() {
+                // Fill hidden input with product_id
+                $('input[name="representative_id"]').val($(this).val());
+                });
+
+                $('#offerDropdown').change(function() {
+                // Fill hidden input with offer_id
+                $('input[name="offer_id"]').val($(this).val());
+                });
+            });
+        </script>
 @endsection

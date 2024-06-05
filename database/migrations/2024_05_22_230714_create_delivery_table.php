@@ -18,7 +18,7 @@ class CreateDeliveryTable extends Migration
             $table->unsignedBigInteger('offer_id');
             $table->unsignedBigInteger('representative_id');
             $table->decimal('price', 10, 2);
-            $table->integer('line');
+            $table->string('line');
             $table->timestamps();
 
             $table->foreign('offer_id')->references('id')->on('offers')->onDelete('cascade');

@@ -15,7 +15,10 @@
                     }
                 }
 
-
+                for (var pair of formData.entries()) {
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
+               
                 var tableName = $('#submitFormButton').data('table');
                 formData.append('table', tableName);
 
@@ -43,6 +46,128 @@
                     success: function(response) {
                         // Show success modal
                         $('#successModal').modal('show');
+
+                        const offerTable = document.getElementById('offerTable');
+                        if (offerTable) {
+                            // Iterate through table rows and save each item
+                            const tableRows = offerTable.querySelectorAll('tbody tr');
+                            tableRows.forEach(row => {
+                                const idCell = row.querySelector('.id');
+                                const labelCell = row.querySelector('.label_name');
+                                const priceCell = row.querySelector('.price');
+                                const quantityCell = row.querySelector('.quantity');
+                                if (labelCell && priceCell) {
+
+                                    const id = idCell.textContent;
+                                    const label = labelCell.textContent;
+                                    const price = priceCell.textContent;
+                                    const quantity = quantityCell.textContent;
+                                    var offer_id = document.getElementById('id').value;
+
+                                    const formData_items = new FormData();
+                                    formData_items.append('table', 'offer_items');
+                                    formData_items.append('product_id', id);
+                                    formData_items.append('offer_id', offer_id);
+                                    formData_items.append('price', price);
+                                    formData_items.append('quantity', quantity);
+
+                                    $.ajax({
+                                    url: '{{ route("create") }}', 
+                                    type: 'POST',
+                                    data: formData_items,
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken 
+                                    },
+
+                                    contentType: false,
+                                    processData: false,
+
+                                });
+                            }     
+                        });
+                    }
+
+                        const returnsTable = document.getElementById('offerReturnTable');
+                        if (returnsTable) {
+                            // Iterate through table rows and save each item
+                            const tableRows = returnsTable.querySelectorAll('tbody tr');
+                            tableRows.forEach(row => {
+                                const idCell = row.querySelector('.id');
+                                const labelCell = row.querySelector('.label_name');
+                                const priceCell = row.querySelector('.price');
+                                const quantityCell = row.querySelector('.quantity');
+                                if (labelCell && priceCell) {
+
+                                    const id = idCell.textContent;
+                                    const label = labelCell.textContent;
+                                    const price = priceCell.textContent;
+                                    const quantity = quantityCell.textContent;
+                                    var offer_id = document.getElementById('id').value;
+
+                                    const formData_items = new FormData();
+                                    formData_items.append('table', 'returns');
+                                    formData_items.append('product_id', id);
+                                    formData_items.append('offer_id', offer_id);
+                                    formData_items.append('price', price);
+                                    formData_items.append('quantity', quantity);
+
+                                    $.ajax({
+                                    url: '{{ route("create") }}', 
+                                    type: 'POST',
+                                    data: formData_items,
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken 
+                                    },
+
+                                    contentType: false,
+                                    processData: false,
+
+                                });
+                            }     
+                        });
+                    }
+
+                        const invoiceTable = document.getElementById('invoiceTable');
+                        if (invoiceTable) {
+                            // Iterate through table rows and save each item
+                            const tableRows = invoiceTable.querySelectorAll('tbody tr');
+                            tableRows.forEach(row => {
+                                const idCell = row.querySelector('.id');
+                                const labelCell = row.querySelector('.label_name');
+                                const priceCell = row.querySelector('.price');
+                                const quantityCell = row.querySelector('.quantity');
+                                if (labelCell && priceCell) {
+
+                                    const id = idCell.textContent;
+                                    const label = labelCell.textContent;
+                                    const price = priceCell.textContent;
+                                    const quantity = quantityCell.textContent;
+                                    var invoice_id = document.getElementById('id').value;
+
+                                    const formData_items = new FormData();
+                                    formData_items.append('table', 'invoice_items');
+                                    formData_items.append('product_id', id);
+                                    formData_items.append('invoice_id', invoice_id);
+                                    formData_items.append('price', price);
+                                    formData_items.append('quantity', quantity);
+
+                                    $.ajax({
+                                    url: '{{ route("create") }}', 
+                                    type: 'POST',
+                                    data: formData_items,
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken 
+                                    },
+
+                                    contentType: false,
+                                    processData: false,
+
+                                });
+                            }     
+                        });
+                    }
+
+                        
                     },
                     error: function(xhr, status, error) {
                     // Handle validation errors

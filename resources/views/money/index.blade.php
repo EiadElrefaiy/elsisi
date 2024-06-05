@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+<button type="button" id="submitFormButton" class="btn btn-primary m-2 w-25 hide" data-table="products"></button>
 <div class="row">
 <div class="col-md-12">
     <div class="card">
@@ -19,6 +19,7 @@
                     class="col-sm-3 text-end control-label col-form-label"
                     >من</label>
                     <input
+                      id="from_date"
                       type="text"
                       class="form-control mydatepicker"
                       placeholder="mm/dd/yyyy"
@@ -36,6 +37,7 @@
                     class="col-sm-3 text-end control-label col-form-label"
                     >الى</label>
                     <input
+                      id="to_date"
                       type="text"
                       class="form-control mydatepicker"
                       placeholder="mm/dd/yyyy"
@@ -47,7 +49,14 @@
                    </div>
                 </div>
               </div> 
-          </div>
+             </div>
+
+          <div class="col-12" dir="rtl">
+              <a id="searchButton" href="javascript:void(0);" style="padding: 3px 15px;" type="button" class="btn btn-info text-white">
+                  بحث
+              </a>
+           </div>
+
            </div>
           </div>
         <div class="row">
@@ -73,46 +82,26 @@
                     </tr>
                   </thead>
                   <tbody class="customtable">
-                    <tr>
-                      <td>تسليم عرض رقم 2701</td>
-                      <td>8500 ج</td>
-                      <td>20-04-2024</td>
-                      <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'money.revenues.edit']) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
+                  @php
+                  $total = 0;
+                  @endphp
+
+                  @foreach ($data->where("operation", "revenue") as $item)
+                  @php
+                  $total += $item->price;
+                  @endphp
+                  <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                      <td>{{ $item->description }}</td>
+                      <td>{{ $item->price }} ج</td>
+                      <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
+                      <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'money.revenues.edit' , 'table' => 'money' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'money')"><i class="mdi mdi-delete"></i></a></td>
                   </tr>
+                  @endforeach
+
                   <tr>
-                    <td>تسليم عرض رقم 2701</td>
-                    <td>8500 ج</td>
-                    <td>20-04-2024</td>
-                    <td><a style="color: #3e5569;" href="revenue_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                </tr>
-                <tr>
-                    <td>تسليم عرض رقم 2701</td>
-                    <td>8500 ج</td>
-                    <td>20-04-2024</td>
-                    <td><a style="color: #3e5569;" href="revenue_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                </tr>
-                <tr>
-                    <td>تسليم عرض رقم 2701</td>
-                    <td>8500 ج</td>
-                    <td>20-04-2024</td>
-                    <td><a style="color: #3e5569;" href="revenue_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                </tr>
-                <tr>
-                    <td>تسليم عرض رقم 2701</td>
-                    <td>8500 ج</td>
-                    <td>20-04-2024</td>
-                    <td><a style="color: #3e5569;" href="revenue_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                </tr>
-                <tr>
-                    <td>تسليم عرض رقم 2701</td>
-                    <td>8500 ج</td>
-                    <td>20-04-2024</td>
-                    <td><a style="color: #3e5569;" href="revenue_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                </tr>
-                <tr>
-                    <td colspan="3">الاجمالي</td>
-                    <td>8500 ج</td>
-                </tr>
+                      <td colspan="3">الاجمالي</td>
+                      <td>{{ $total }} ج</td>
+                  </tr>
                 </tbody>
                 </table>
               </div>
@@ -140,46 +129,26 @@
                       </tr>
                     </thead>
                   <tbody class="customtable">
-                    <tr>
-                        <td>فاتورة رقم 2701</td>
-                        <td>8500 ج</td>
-                        <td>20-04-2024</td>
-                        <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'money.expenses.edit']) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>فاتورة رقم 2701</td>
-                        <td>8500 ج</td>
-                        <td>20-04-2024</td>
-                        <td><a style="color: #3e5569;" href="expense_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>فاتورة رقم 2701</td>
-                        <td>8500 ج</td>
-                        <td>20-04-2024</td>
-                        <td><a style="color: #3e5569;" href="expense_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>فاتورة رقم 2701</td>
-                        <td>8500 ج</td>
-                        <td>20-04-2024</td>
-                        <td><a style="color: #3e5569;" href="expense_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>فاتورة رقم 2701</td>
-                        <td>8500 ج</td>
-                        <td>20-04-2024</td>
-                        <td><a style="color: #3e5569;" href="expense_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td>فاتورة رقم 2701</td>
-                        <td>8500 ج</td>
-                        <td>20-04-2024</td>
-                        <td><a style="color: #3e5569;" href="expense_info.html"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">الاجمالي</td>
-                        <td>8500 ج</td>
-                    </tr>    
+                  @php
+                  $total = 0;
+                  @endphp
+
+                  @foreach ($data->where("operation", "expense") as $item)
+                  @php
+                  $total += $item->price;
+                  @endphp
+                  <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                      <td>{{ $item->description }}</td>
+                      <td>{{ $item->price }} ج</td>
+                      <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
+                      <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'money.expenses.edit' , 'table' => 'money' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'money')"><i class="mdi mdi-delete"></i></a></td>
+                  </tr>
+                  @endforeach
+
+                  <tr>
+                      <td colspan="3">الاجمالي</td>
+                      <td>{{ $total }} ج</td>
+                  </tr>
                   </tbody>
                 </table>
               </div>
@@ -192,4 +161,38 @@
   </div>
 
 </div>
+
+@include('modals.confirmDelete')
+
+@include('modals.successDelete')
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+     @include('js.index')
+
+     <script>
+    $(document).ready(function() {
+        $('#searchButton').on('click', function() {
+            var from_date = $('#from_date').val();
+            var to_date = $('#to_date').val();
+
+            var fromDate = new Date(from_date);
+            var toDate = new Date(to_date);
+
+            $('.dataRow').each(function() {
+                var date = $(this).find('.date').text();
+                var rowDate = new Date(date);
+
+                if (rowDate >= fromDate && rowDate <= toDate) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+  </script>
+
 @endsection

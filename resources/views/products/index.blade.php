@@ -90,7 +90,7 @@
 
                     // Append new rows to the table
                     response.results.forEach(function(item) {
-                        var row = '<tr>' +
+                        var row = '<tr dataRow_' + item.id  +
                                     '<td>' + item.name + '</td>' +
                                     '<td>' + item.price + ' ج</td>' +
                                     '<td>' + item.quantity + '</td>' +

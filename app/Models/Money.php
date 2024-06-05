@@ -14,7 +14,7 @@ class Money extends Model
         'price',
         'description',
         'operation',
-        'date',
+        'created_at',
     ];
 
     // Define the relationship with the Offer model
