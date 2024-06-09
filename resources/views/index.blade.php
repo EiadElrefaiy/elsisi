@@ -140,7 +140,7 @@
 
             <!-- Column -->
             <div class="col-md-6 col-lg-2 col-xlg-3">
-             <a href="{{ route('index', ['view' => 'procedures.index']) }}">
+             <a href="{{ route('index', ['table' => 'procedures', 'view' => 'procedures.index']) }}">
               <div class="card card-hover">
                 <div class="box bg-danger text-center">
                   <h1 class="font-light text-white">
@@ -153,7 +153,7 @@
             </div>
             <!-- Column -->
             <div class="col-md-6 col-lg-2 col-xlg-3">
-             <a href="{{ route('index', ['view' => 'attendance.index']) }}">
+             <a href="{{ route('index', ['table'=>'attendance' , 'view' => 'attendance.index']) }}">
               <div class="card card-hover">
                 <div class="box bg-success text-center">
                   <h1 class="font-light text-white">
@@ -196,45 +196,55 @@
                         <div class="col-4">
                           <div class="bg-dark p-10 text-white text-center">
                             <i class="mdi mdi-account fs-3 mb-1 font-16"></i>
-                            <h5 class="mb-0 mt-1">2540</h5>
+                            <h5 class="mb-0 mt-1">{{$employees_count}}</h5>
                             <small class="font-light">عدد الموظفين</small>
                           </div>
                         </div>
                         <div class="col-4">
                           <div class="bg-dark p-10 text-white text-center">
                             <i class="mdi mdi-cart fs-3 mb-1 font-16"></i>
-                            <h5 class="mb-0 mt-1">9540</h5>
+                            <h5 class="mb-0 mt-1">{{$products_count}}</h5>
                             <small class="font-light">عدد المنتجات</small>
                           </div>
                         </div>
                         <div class="col-4">
                           <div class="bg-dark p-10 text-white text-center">
                             <i class="mdi mdi-car fs-3 mb-1 font-16"></i>
-                            <h5 class="mb-0 mt-1">100</h5>
+                            <h5 class="mb-0 mt-1">{{$representatives_count}}</h5>
                             <small class="font-light">عدد المناديب</small>
                           </div>
                         </div>
                         <div class="col-6 mt-3">
                           <div class="bg-dark p-10 text-white text-center">
                             <i class="mdi mdi-receipt fs-3 font-16"></i>
-                            <h5 class="mb-0 mt-1">120</h5>
+                            <h5 class="mb-0 mt-1">{{$offers_count}}</h5>
                             <small class="font-light">عدد العروض</small>
                           </div>
                         </div>
                         <div class="col-6 mt-3">
                           <div class="bg-dark p-10 text-white text-center">
                             <i class="mdi mdi-currency-usd fs-3 mb-1 font-16"></i>
-                            <h5 class="mb-0 mt-1">656</h5>
+                            <h5 class="mb-0 mt-1">{{$offers_total}}</h5>
                             <small class="font-light">اجمالي المبيعات</small>
                           </div>
                         </div>
-                        <div class="col-12 mt-3">
+
+                        <div class="col-6 mt-3">
+                          <div class="bg-dark p-10 text-white text-center" style="padding-bottom:1px;">
+                            <i class="fas fa-handshake fs-3 mb-1 font-16" style="padding-bottom:3px; margin-top:6px;"></i>
+                            <h5 class="mb-0 mt-1">{{$suppliers_count}}</h5>
+                            <small class="font-light">عدد الموردين</small>
+                          </div>
+                        </div>
+
+                        <div class="col-6 mt-3">
                           <div class="bg-dark p-10 text-white text-center">
                             <i class="mdi mdi-account-multiple fs-3 mb-1 font-16"></i>
-                            <h5 class="mb-0 mt-1">2540</h5>
+                            <h5 class="mb-0 mt-1">{{$clients_count}}</h5>
                             <small class="font-light">عدد العملاء</small>
                           </div>
                         </div>
+
 
                       </div>
                     </div>

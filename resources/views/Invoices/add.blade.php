@@ -31,7 +31,7 @@
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                           </select>
-                                          <input class="hide" id="supplier_id" name="supplier_id" type="text" value="0"/>
+                                          <input class="hide" id="supplier_id" name="supplier_id" type="text"/>
                                         </div>
                                       </div> 
                                 </div>
@@ -43,6 +43,7 @@
                                         <div class="col-md-9">
                                         <div class="input-group">
                                           <input
+                                            value="{{date('m/d/Y')}}"
                                             name="created_at"
                                             type="text"
                                             class="form-control mydatepicker"

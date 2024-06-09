@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\ModelHelperTrait;
+use Carbon\Carbon;
 
 class UpdateController extends Controller
 {
@@ -75,6 +76,32 @@ class UpdateController extends Controller
                 return view($view, compact('data' , 'withData' , 'withData2'));  
             }
 
+            if($view == "procedures.discounts.edit" || $view == "procedures.rewards.edit"){
+        
+                // Determine the model class based on the table name
+                $modelClass = $this->getModelClass("employees");
+            
+                if ($modelClass) {
+                // Eager load relationships based on the model class
+                $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+                
+                }
+                return view($view, compact('data','withData'));
+            }
+
+            if($view == "attendance.attendance.edit" || $view == "attendance.abcense.edit"){
+        
+                // Determine the model class based on the table name
+                $modelClass = $this->getModelClass("employees");
+            
+                if ($modelClass) {
+                // Eager load relationships based on the model class
+                $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+                
+                }
+                return view($view, compact('data','withData'));
+            }
+        
             if($view == "invoices.edit"){ 
             
             // Eager load relationships based on the model class
@@ -167,14 +194,19 @@ class UpdateController extends Controller
             $requestData = array_merge($request->all(), ['image' => 'images/' . $table . '/' . $fileName]);
         }
 
+        // Format created_at and updated_at fields
+        $created_at = $request->has('created_at') ? Carbon::createFromFormat('m/d/Y', $request->input('created_at'))->format('Y-m-d H:i:s') : now();
+        $updated_at = now();
+
+        $requestData['created_at'] = $created_at;
+        $requestData['updated_at'] = $updated_at;
+
+        
         unset($requestData['table']);
         unset($requestData['password_confirmation']);
 
         if ($data) {
-            DB::table($table)->where('id', $request->id)->update(array_merge($requestData, [
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]));
+            DB::table($table)->where('id', $request->id)->update($requestData);
             if($table == "offers"){
                 DB::table("offer_items")->where("offer_id" , $data->id)->delete();
                 DB::table("returns")->where("offer_id" , $data->id)->delete();

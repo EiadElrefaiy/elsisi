@@ -13,9 +13,11 @@
                     @include('procedures.rewards.form')
 
 
-                    <button type="button" class="btn btn-primary m-2">
+                    <div id="errorMessages" class="alert alert-danger hide"></div>
+
+                    <button type="button" id="submitFormButton" class="btn btn-primary m-2" data-table="procedures" data-view="procedures.index">
                             حفظ البيانات
-                          </button>
+                    </button>
                 
                         </div>    
                           
@@ -23,5 +25,22 @@
               </div>
            </div>
         </div>
+
+        @include('modals.successAdd')
+
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+        @include('js.create')
+
+
+        <script>
+        $(document).ready(function() {
+            $('#employeeSelect').on('change', function() {
+                var selectedEmployeetId = $(this).val();
+                $('#employee_id').val(selectedEmployeetId);
+            });
+        });
+    </script>
 
 @endsection

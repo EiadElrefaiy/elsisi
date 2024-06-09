@@ -26,7 +26,7 @@
                     </div>       
                   </div>
                   <div class="col-12 mt-2">
-                    <a href="add_attendance.html" style="padding: 3px 15px;" type="button" class="btn btn-cyan text-white ">
+                    <a href="#" id="searchButton" style="padding: 3px 15px;" type="button" class="btn btn-cyan text-white ">
                       بحث
                     </a>
                   </div>                         
@@ -44,6 +44,8 @@
                     class="col-sm-3 text-end control-label col-form-label"
                     >من</label>
                     <input
+                      value="{{date('m/d/Y')}}"
+                      id="from_date"
                       type="text"
                       class="form-control mydatepicker"
                       placeholder="mm/dd/yyyy"
@@ -61,6 +63,8 @@
                     class="col-sm-3 text-end control-label col-form-label"
                     >الى</label>
                     <input
+                      value="{{date('m/d/Y')}}"
+                      id ="to_date"
                       type="text"
                       class="form-control mydatepicker"
                       placeholder="mm/dd/yyyy"
@@ -103,60 +107,34 @@
                             </tr>
                         </thead>
                         <tbody class="customtable">
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'procedures.discounts.edit']) }}"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
+                                @php
+                                $totalDiscount = 0;
+                                @endphp
+
+                                @foreach ($data->where("operation", "discount") as $item)
+                                @php
+                                $totalDiscount += $item->price;
+                                @endphp
+                                <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                                <td>{{ $item->employee->name }}</td>
+                                <td>{{ $item->price }} ج</td>
+                                <td>{{ $item->description }}</td>
+                                <td class="date">{{ $item->created_at->format('Y-m-d') }}</td>
+                                <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'procedures.discounts.edit','table' => 'procedures' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>
+                                &nbsp;&nbsp;   
+
+                                <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'procedures')">
+                                    <i class="mdi mdi-delete"></i>
+                                </a>
+                              </td>
                             </tr>
+                            @endforeach
+
                             <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
+                                <td colspan="4">الاجمالي</td>
+                                <td>{{ $totalDiscount }} ج</td>
                             </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                        </tr>
+
                   </tbody>
                 </table>
               </div>
@@ -187,61 +165,34 @@
                             </tr>
                         </thead>
                         <tbody class="customtable">
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'procedures.rewards.edit']) }}"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
+                                @php
+                                $totalReward = 0;
+                                @endphp
+
+                                @foreach ($data->where("operation", "reward") as $item)
+                                @php
+                                $totalReward += $item->price;
+                                @endphp
+                                <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                                <td>{{ $item->employee->name }}</td>
+                                <td>{{ $item->price }} ج</td>
+                                <td>{{ $item->description }}</td>
+                                <td class="date">{{ $item->created_at->format('Y-m-d') }}</td>
+                                <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'procedures.rewards.edit' , 'id'=> $item->id , 'table'=>'procedures']) }}"><i class="mdi mdi-grease-pencil"></i></a>
+                                &nbsp;&nbsp;   
+
+                                <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'procedures')">
+                                    <i class="mdi mdi-delete"></i>
+                                </a>
+                              </td>
                             </tr>
+                            @endforeach
                             <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
+                                <td colspan="4">الاجمالي</td>
+                                <td>{{ $totalReward }} ج</td>
                             </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>محمد عبد المعطي</td>
-                                <td>200 ج</td>
-                                <td>يمكن اضافة اي ملاحظة</td>
-                                <td>20-04-2024</td>
-                                <td><a style="color: #3e5569;" href="attendance_info.html"><i
-                                            class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i
-                                            class="mdi mdi-delete"></i></a></td>
-                        </tr>
-                   </tbody>
+
+                  </tbody>
                 </table>
               </div>
           </div>
@@ -249,4 +200,38 @@
       </div>
   </div>
 </div>
+
+@include('modals.confirmDelete')
+
+@include('modals.successDelete')
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+     @include('js.index')
+
+     <script>
+    $(document).ready(function() {
+        $('#searchButton').on('click', function() {
+            var from_date = $('#from_date').val();
+            var to_date = $('#to_date').val();
+
+            var fromDate = new Date(from_date);
+            var toDate = new Date(to_date);
+
+            $('.dataRow').each(function() {
+                var date = $(this).find('.date').text();
+                var rowDate = new Date(date);
+
+                if (rowDate >= fromDate && rowDate <= toDate) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+  </script>
+
 @endsection

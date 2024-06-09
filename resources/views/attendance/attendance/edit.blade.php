@@ -12,7 +12,7 @@
                     @include('attendance.attendance.form')
 
 
-                    <button type="button" class="btn btn-primary m-2">
+                    <button type="button" id="submitFormButton" class="btn btn-primary m-2" data-table="attendance">
                             حفظ البيانات
                           </button>
                 
@@ -23,4 +23,20 @@
            </div>
 
         </div>
-        @endsection
+        
+        @include('modals.successEdit')
+
+       <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        @include('js.edit')
+
+        <script>
+        $(document).ready(function() {
+            $('#employeeSelect').on('change', function() {
+                var selectedEmployeetId = $(this).val();
+                $('#employee_id').val(selectedEmployeetId);
+            });
+        });
+    </script>
+
+@endsection

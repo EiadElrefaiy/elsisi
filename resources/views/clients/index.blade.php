@@ -34,7 +34,6 @@
                             <th scope="col">رقم التليفون</th>
                             <th scope="col">المحافظة</th>
                             <th scope="col">العنوان</th>
-                            <th scope="col">الحالة</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -45,7 +44,6 @@
                             <td>{{ $item['phone'] }}</td>
                             <td>{{ $item['state'] }}</td>
                             <td>{{ $item['address'] }}</td>
-                            <td><span class="badge bg-success">{{ $item['status'] }}</span></td>
                             <td>
                                 <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'clients.edit', 'table' => 'clients', 'id' => $item['id'] ]) }}">
                                     <i class="mdi mdi-grease-pencil"></i>
@@ -97,7 +95,6 @@
                                     '<td>' + item.phone + '</td>' +
                                     '<td>' + item.state + '</td>' +
                                     '<td>' + item.address + '</td>' +
-                                    '<td><span class="badge bg-success">' + item.status + '</span></td>' +
                                     '<td>' +
                                         '<a style="color: #3e5569;" href="{{ route('edit', ['view' => 'clients.edit', 'table' => 'clients', 'id' => '']) }}' + item.id + '">' +
                                             '<i class="mdi mdi-grease-pencil"></i>' +

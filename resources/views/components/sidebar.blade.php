@@ -6,15 +6,41 @@
           <nav class="sidebar-nav">
             <ul id="sidebarnav" class="pt-4">
               <li class="sidebar-item text-center">
-                <a style="padding: 1px;" href="{{ route('edit', ['table' => 'users', 'view' => 'management.edit']) }}" aria-expanded="false">
+                <a style="padding: 1px;" href="{{ route('edit', ['view' => auth()->check() ? 'management.edit' : 'representatives.edit' , 'table' => auth()->check() ? 'users' : 'representatives' , 'id' => auth()->check() ? auth()->user()->id : Auth::guard('representative')->user()->id ]) }}" aria-expanded="false">
                   <div class="admin-picture">
-                    <img src="../assets/images/businessman.png" alt="Admin Picture">
-                  </div>
-                </a>
+                  @php
+                    $hide = '';
+                    if(Auth::guard('representative')->check()){
+                      $hide = 'hide';
+                    }
+                  @endphp
+
+              @if(auth()->check())
+                  @if(auth()->user()->image)
+                      <img src="{{ Storage::url('public/' . auth()->user()->image) }}" alt="User Picture">
+                  @else
+                      <img src="{{ asset('assets/images/default-user-image.png') }}" alt="User Picture">
+                  @endif
+                
+                @else
+                <img src="{{ asset('assets/images/businessman.png') }}" alt="User Picture">
+              @endif
+              </div>
+              
+               </a>
+              @if(auth()->check())
+                @if(auth()->user()->position == 1)
+                <p class="admin-role" style="color: #a4a7ac;">الادمن</p>
+                @else
                 <p class="admin-role" style="color: #a4a7ac;">المشرف</p>
+                @endif
+              @else
+              <p class="admin-role" style="color: #a4a7ac;">مندوب شحن</p>
+              @endif
+
               </li>
               <hr>
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="/"
@@ -23,7 +49,7 @@
                   ><span class="hide-menu">الرئبسية</span></a
                 >
               </li>
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="{{ route('index', ['table' => 'users', 'view' => 'management.index']) }}"
@@ -33,7 +59,7 @@
                 >
               </li>
 
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="{{ route('index', ['table' => 'employees', 'view' => 'employees.index']) }}"
@@ -43,7 +69,7 @@
                 >
               </li>
 
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="{{ route('index', ['table' => 'clients', 'view' => 'clients.index']) }}"
@@ -53,7 +79,7 @@
                 >
               </li>
 
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="{{ route('index', ['table' => 'suppliers', 'view' => 'suppliers.index']) }}"
@@ -63,7 +89,7 @@
                 >
               </li>
 
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="{{ route('index', ['table' => 'representatives', 'view' => 'representatives.index']) }}"
@@ -72,7 +98,7 @@
                   ><span class="hide-menu">المناديب</span></a
                 >
               </li>
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="{{ route('index', ['table' => 'products', 'view' => 'products.index']) }}"
@@ -81,7 +107,7 @@
                   ><span class="hide-menu">المنتجات</span></a
                 >
               </li>
-              <li class="sidebar-item">
+              <li class="sidebar-item {{$hide}}">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
                   href="{{ route('index', ['table' => 'offers', 'view' => 'offers.index']) }}"
@@ -90,6 +116,33 @@
                   ><span class="hide-menu">العروض</span></a
                 >
               </li>
+
+
+              @if(Auth::guard('representative')->check())
+              <li class="sidebar-item">
+                <a
+                  class="sidebar-link waves-effect waves-dark sidebar-link"
+                  href="{{ route('index', ['table' => 'delivery', 'view' => 'delivery.index']) }}"
+                  aria-expanded="false"
+                  ><i class="mdi mdi-car"></i
+                  ><span class="hide-menu">الشحن</span></a
+                >
+              </li>
+              @endif
+
+              @if(Auth::guard('representative')->check())
+              <li class="sidebar-item">
+                <a
+                  class="sidebar-link waves-effect waves-dark sidebar-link"
+                  href="{{ route('index', ['table' => 'returns', 'view' => 'returns.index']) }}"
+                  aria-expanded="false"
+                  ><i class="mdi mdi-keyboard-return"></i
+                  ><span class="hide-menu">المرتجعات</span></a
+                >
+              </li>
+              @endif
+
+              @if(auth()->check() && auth()->user()->position == 1 || Auth::guard('representative')->check())
               <li class="sidebar-item">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
@@ -99,6 +152,9 @@
                   ><span class="hide-menu">الحسابات</span></a
                 >
               </li>
+              @endif
+
+
             </ul>
           </nav>
           <!-- End Sidebar navigation -->

@@ -63,7 +63,7 @@
                                         <div class="input-group" dir="rtl">
                                         <input
                                               name="created_at"
-                                              value="{{ isset($data) ? \Carbon\Carbon::parse($data->created_at)->format('m/d/Y') : '' }}"
+                                              value="{{ isset($data) ? \Carbon\Carbon::parse($data->created_at)->format('m/d/Y') : date('m/d/Y') }}"
                                               type="text"
                                               class="form-control mydatepicker"
                                               placeholder="mm/dd/yyyy"
@@ -75,8 +75,8 @@
                                            </div>
                                         </div>                       
                                   </div>
-
-                                  <input class="hide" name="representative_id" value="{{ isset($data)? $data->representative_id : '0' }}" />
+                                  
+                                  <input class="hide" name="representative_id" value="{{ Auth::guard('representative')->check() ? Auth::guard('representative')->user()->id : (isset($data) ? $data->representative_id : '0') }}" />
                                   <input class="hide" name="operation" value="expense" />
 
                             </div>

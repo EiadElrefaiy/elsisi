@@ -13,7 +13,12 @@
                                             class="select2 form-select shadow-none"
                                             style="width: 100%; height: 36px">
                                             <option value="">رقم العرض</option>
-                                                @foreach ($withData as $item)
+
+                                            @php
+                                                $list = $deliveries->where("representative_id" , Auth::guard('representative')->user()->id)->pluck("offer_id");
+                                            @endphp
+
+                                                @foreach ( Auth::guard('representative')->check() ? $withData->whereIn("id" , $list) : $withData as $item)
                                                     <option value="{{ $item->id }}">{{ $item->offer_num }}</option>
                                                 @endforeach
                                             </select>

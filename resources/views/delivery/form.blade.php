@@ -23,11 +23,11 @@
                                             class="select2 form-select shadow-none"
                                             style="width: 100%; height: 36px">
                                             <option>اختر المندوب</option>
-                                            @foreach ($withData as $item)
+                                            @foreach ( Auth::guard('representative')->check() ? $withData->where('id' , Auth::guard('representative')->user()->id) : $withData as $item)
                                             <option value="{{ $item->id }}" {{ (isset($data) && $data->representative->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
                                             @endforeach
                                             </select>
-                                            <input class="hide" name="representative_id" type="text" value="0"/>
+                                            <input class="hide" name="representative_id" type="text" value="{{ isset($data) ? $data->representative_id : '' }}"/>
                                         </div>
                                       </div> 
                                 </div>
@@ -49,7 +49,7 @@
                                             <option value="{{ $item->id }}" {{ (isset($data) && $data->offer->offer_num == $item->offer_num) ? 'selected' : '' }}>{{ $item->offer_num }}</option>
                                             @endforeach
                                             </select>
-                                            <input class="hide" name="offer_id" type="text" value="0"/>
+                                            <input class="hide" name="offer_id" type="text" value="{{ isset($data) ? $data->offer_id : '' }}"/>
                                         </div>
                                       </div> 
                                 </div>
@@ -62,7 +62,7 @@
                                         <div class="input-group" dir="rtl">
                                             <input
                                               name="created_at"
-                                              value="{{ isset($data) ? \Carbon\Carbon::parse($data->created_at)->format('m/d/Y') : '' }}"
+                                              value="{{ isset($data) ? \Carbon\Carbon::parse($data->created_at)->format('m/d/Y') : date('m/d/Y') }}"
                                               type="text"
                                               class="form-control mydatepicker"
                                               placeholder="mm/dd/yyyy"

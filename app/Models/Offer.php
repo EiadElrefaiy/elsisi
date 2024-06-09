@@ -47,4 +47,9 @@ class Offer extends Model
         return $this->belongsTo(Representative::class);
     }
 
+    public function deliveries()
+    {
+        return $this->hasMany(Delivery::class);
+    }
+
 }

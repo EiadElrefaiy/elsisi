@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'representative' => [
+            'driver' => 'session',
+            'provider' => 'representatives', // Use the 'representatives' provider
+        ],    
     ],
 
     /*
@@ -63,6 +68,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'representatives' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Representative::class, // Your representative model
         ],
 
         // 'users' => [

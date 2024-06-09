@@ -96,16 +96,35 @@
                   <i class="mdi mdi-bell font-24"></i>
                 </a>
               </li>
-              <li class="nav-item dropdown">
-                <a
-                  style="transform: rotate(180deg);"
-                  class="nav-link dropdown-toggle"
+              
+              <li     
+              class="" 
+              style="transform: rotate(180deg); margin-bottom:14px; margin-left:12px; color: #d2d4d5; cursor:pointer;"
+              onclick="login();"
+              onmouseover="this.style.color='#ffffff';"
+              onmouseout="this.style.color='#d2d4d5';"
+              >
+
+
+                  <a
                   href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
+                      style="color: #d2d4d5;"
+                      class=""
+                      
+                      id="logout-link"
+                      role=""
+                      data-bs-toggle=""
+                      aria-expanded="false"
+                      onmouseover="this.style.color='#ffffff';"
+                      onmouseout="this.style.color='#d2d4d5';"
+                  >
+                  </a>
+                  
+                  <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display: none;">
+                  @csrf
+                  <button type="submit">Logout</button>
+              </form>
+
                   <i class="mdi mdi-logout font-24"></i>
                 </a>
               </li>
@@ -118,3 +137,11 @@
           </div>
         </nav>
       </header>
+
+      
+      <script>
+        function login(){
+            // Show the form and submit it
+            document.getElementById('logout-form').submit();
+        }
+    </script>

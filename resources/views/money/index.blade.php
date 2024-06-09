@@ -12,13 +12,14 @@
             </div>
             <div class="col-sm-5 col-6" dir="ltr">
               <div class="form-group row">
-                  <div class="col-12">
+                <div class="col-12">
                   <div class="input-group" dir="rtl">
                     <label
                     for="lname"
                     class="col-sm-3 text-end control-label col-form-label"
                     >من</label>
                     <input
+                      value = "{{date('m/d/Y')}}"
                       id="from_date"
                       type="text"
                       class="form-control mydatepicker"
@@ -37,6 +38,7 @@
                     class="col-sm-3 text-end control-label col-form-label"
                     >الى</label>
                     <input
+                      value = "{{date('m/d/Y')}}"
                       id="to_date"
                       type="text"
                       class="form-control mydatepicker"
@@ -51,7 +53,25 @@
               </div> 
              </div>
 
-          <div class="col-12" dir="rtl">
+        <div class="col-6 mt-2">
+         <div class="input-group">
+           <div class="input-group-append">
+             <span class="input-group-text" style="padding: 9.5px;" id="basic-addon2"
+               ><i class=" fas fa-search"></i></span>
+           </div>
+           <input
+             id="searchInput"
+             type="text"
+             class="form-control"
+             placeholder="بحث"
+             aria-label="Recipient 's username"
+             aria-describedby="basic-addon2"
+           />
+         </div>    
+
+       </div>
+
+          <div class="col-6" dir="ltr">
               <a id="searchButton" href="javascript:void(0);" style="padding: 3px 15px;" type="button" class="btn btn-info text-white">
                   بحث
               </a>
@@ -75,6 +95,7 @@
                 <table class="table">
                   <thead class="thead-light">
                     <tr>
+                      <th scope="col">صاحب الاجراء</th>
                       <th scope="col">الوصف</th>
                       <th scope="col">المبلغ</th>
                       <th scope="col">التاريخ</th>
@@ -86,11 +107,12 @@
                   $total = 0;
                   @endphp
 
-                  @foreach ($data->where("operation", "revenue") as $item)
+                  @foreach ( Auth::guard('representative')->check() ? $data->where('representative_id' , Auth::guard('representative')->user()->id)->where("operation", "revenue") : $data->where("operation", "revenue") as $item)
                   @php
                   $total += $item->price;
                   @endphp
                   <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                      <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . $item->representative->name}}</td>
                       <td>{{ $item->description }}</td>
                       <td>{{ $item->price }} ج</td>
                       <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
@@ -122,6 +144,7 @@
                 <table class="table">
                   <thead class="thead-light">
                     <tr>
+                        <th scope="col">صاحب الاجراء</th>
                         <th scope="col">الوصف</th>
                         <th scope="col">المبلغ</th>
                         <th scope="col">التاريخ</th>
@@ -133,11 +156,12 @@
                   $total = 0;
                   @endphp
 
-                  @foreach ($data->where("operation", "expense") as $item)
+                  @foreach ( Auth::guard('representative')->check() ? $data->where('representative_id' , Auth::guard('representative')->user()->id)->where("operation", "expense") : $data->where("operation", "expense") as $item)
                   @php
                   $total += $item->price;
                   @endphp
                   <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                      <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . $item->representative->name}}</td>
                       <td>{{ $item->description }}</td>
                       <td>{{ $item->price }} ج</td>
                       <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
@@ -173,26 +197,36 @@
      @include('js.index')
 
      <script>
-    $(document).ready(function() {
-        $('#searchButton').on('click', function() {
-            var from_date = $('#from_date').val();
-            var to_date = $('#to_date').val();
+  $(document).ready(function() {
+      $('#searchButton').on('click', function() {
+          var from_date = $('#from_date').val();
+          var to_date = $('#to_date').val();
+          var searchText = $('#searchInput').val().toLowerCase();
 
-            var fromDate = new Date(from_date);
-            var toDate = new Date(to_date);
+          var fromDate = new Date(from_date);
+          var toDate = new Date(to_date);
 
-            $('.dataRow').each(function() {
-                var date = $(this).find('.date').text();
-                var rowDate = new Date(date);
+          $('.dataRow').each(function() {
+              var date = $(this).find('.date').text();
+              var rowDate = new Date(date);
+              var rowMatchesSearch = false;
 
-                if (rowDate >= fromDate && rowDate <= toDate) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    });
-  </script>
+              $(this).find('td').each(function() {
+                  var cellText = $(this).text().toLowerCase();
+                  if (cellText.includes(searchText)) {
+                      rowMatchesSearch = true;
+                      return false; // Exit the loop early since we found a match
+                  }
+              });
+
+              if (rowDate >= fromDate && rowDate <= toDate && (searchText === '' || rowMatchesSearch)) {
+                  $(this).show();
+              } else {
+                  $(this).hide();
+              }
+          });
+      });
+  });
+</script>
 
 @endsection

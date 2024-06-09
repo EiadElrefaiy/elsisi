@@ -148,6 +148,25 @@
                 </td>
             </tr>
             @endforeach
+            <tr>
+                <td >اجمالي العروض</td>
+                <td>{{$data->sum("total")}} ج</td>
+                <td>اجمالي المرتجعات</td>
+
+                         @php
+                            $totalReturns = 0;
+                        @endphp
+
+                        @foreach($data as $item)
+                            @php
+                                $totalReturns += $item->returns->where("offer_id" , $item->id)->sum("price") * $item->returns->where("offer_id" , $item->id)->sum("quantity");
+                            @endphp
+                        @endforeach
+
+                <td>{{$totalReturns}} ج</td>
+                <td>الاجمالي</td>
+                <td>{{$data->sum("total") - $totalReturns}} ج</td>
+            </tr>
         </tbody>
       </table>
      </div>

@@ -14,8 +14,8 @@ class Attendance extends Model
         'employee_id',
         'from',
         'to',
-        'date',
         'operation',
+        'notes',
     ];
 
     // Define the relationship with the Employee model

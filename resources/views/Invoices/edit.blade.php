@@ -55,7 +55,7 @@
                                           
                                         <input
                                           name="created_at"
-                                          value="{{ isset($data) ? \Carbon\Carbon::parse($data->created_at)->format('m/d/Y') : '' }}"
+                                          value="{{ isset($data) ? \Carbon\Carbon::parse($data->created_at)->format('m/d/Y') : date('m/d/Y') }}"
                                           type="text"
                                           class="form-control mydatepicker"
                                           placeholder="mm/dd/yyyy"

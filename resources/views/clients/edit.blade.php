@@ -38,55 +38,57 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-4 mt-2">
-                    <div class="input-group">
-                        <div class="input-group-append">
-                            <span class="input-group-text" style="padding: 9.5px;" id="basic-addon2"><i class="fas fa-search"></i></span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="بحث" aria-label="Recipient 's username" aria-describedby="basic-addon2" />
-                    </div>
-                </div>
             </div>
         </div>
         <div class="table-responsive">
             <table class="table">
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col">الكود</th>
-                        <th scope="col">اسم العرض</th>
-                        <th scope="col">الاجمالي</th>
-                        <th scope="col">المدفوع</th>
-                        <th scope="col">المتبقي</th>
-                        <th scope="col">تاريخ العرض</th>
-                        <th scope="col">تاريخ التسليم</th>
-                        <th scope="col">الحالة</th>
-                        <th scope="col">حالة الدفع</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
+                    <th scope="col">رقم العرض</th>
+                    <th scope="col">اسم العميل</th>
+                    <th scope="col">رقم التليفون</th>
+                    <th scope="col">المحافظة</th>
+                    <th scope="col">العنوان</th>
+                    <th scope="col">الملاحظات</th>
+                    <th scope="col">تاريخ العرض</th>
+                    <th scope="col">الحالة</th>
+                    <th scope="col">حالة الدفع</th>
+                    <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody class="customtable">
-                    @foreach ($data->offers as $offer)
-                    <tr>
-                        <td>{{ $offer->num }}</td>
-                        <td>{{ $offer->name }}</td>
-                        <td>{{ $offer->total }} ج</td>
-                        <td>{{ $offer->payed }} ج</td>
-                        <td>{{ $offer->total - $offer->payed }} ج</td>
-                        <td>{{ $offer->created_at }}</td>
-                        <td><span class="badge bg-warning">{{ $offer->status }}</span></td>
-                        <td><span class="badge bg-success">{{ $offer->financial_state }}</span></td>
-                        <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'offers.edit']) }}"><i class="mdi mdi-eye"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="#"><i class="mdi mdi-delete"></i></a> &nbsp;&nbsp; <a style="color: #3e5569;" href="offer_info.html"><i class="mdi mdi-pencil"></i></a></td>
+                    @foreach ($data->offers as $item)
+                    <tr id="dataRow_{{ $item['id'] }}">
+                        <td>{{ $item->offer_num}}</td>
+                        <td>{{ $item->client->name }}</td>
+                        <td>{{ $item->client->phone }}</td>
+                        <td>{{ $item->client->state}}</td>
+                        <td>{{ $item->client->address }}</td>
+                        <td>{{ $item->notes == null ? '................' : $item->notes}}</td>
+                        <td class="date-cell">{{ $item->created_at->format('Y-m-d') }}</td>
+                        <td >
+                            <span class="badge {{ $item->state == 0 ? 'bg-warning' : ($item->state == 1 ? 'bg-success' : ($item->state == 2 ? 'bg-danger' : '')) }}">
+                            {{ $item->state == 0 ? 'قيد الشحن' : ($item->state == 1 ? 'تم التسليم' : ($item->state == 2 ? 'رفض الاستلام' : '')) }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {{ $item->financial_state == 1 ? 'bg-success' : ($item->financial_state == 0 ? 'bg-warning' : ($item->financial_state == 2 ? 'bg-danger' : ($item->financial_state == 3 ? 'bg-warning' : '' ))) }}">
+                            {{ $item->financial_state == 1 ? 'مدفوع' : ($item->financial_state == 0 ? 'عند الاستلام' : ($item->financial_state == 2 ? 'مرفوض' : ($item->financial_state == 3 ? 'متبقي' : '' ))) }}
+                            </span>
+                        </td>
+                        <td>
+                            <a style="color: #3e5569;" href="{{ route('offer_print', ['view' => 'offers.offer_print', 'table' => 'offers', 'id' => $item['id'] ]) }}">
+                                <i class="mdi mdi-eye"></i>
+                            </a>&nbsp;&nbsp; 
+                            <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item['id'] }}', 'offers')">
+                                <i class="mdi mdi-delete"></i>
+                            </a> &nbsp;&nbsp; 
+                            <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'offers.edit', 'table' => 'offers' ,'id' => $item['id'] ]) }}">
+                                <i class="mdi mdi-pencil"></i>
+                            </a>
+                        </td>
                     </tr>
                     @endforeach
-                    <tr>
-                        <td>الاجمالي</td>
-                        <td>{{ $data->offers->sum('total') }} ج</td>
-                        <td>المدفوع</td>
-                        <td>{{ $data->offers->sum('payed') }} ج</td>
-                        <td>المتبقي</td>
-                        <td>{{ $data->offers->sum('total') - $data->offers->sum('payed') }} ج</td>
-                    </tr>
                 </tbody>
             </table>
         </div>

@@ -38,6 +38,7 @@
                                       id="lname"
                                       placeholder="اسم العرض"
                                       value="{{ isset($data)? $data->name : '' }}"
+                                      @if(Auth::guard('representative')->check()) readonly @endif
                                       />
                                   </div>
                               </div>
@@ -51,7 +52,10 @@
                                           <select
                                             id="clientSelect"
                                             class="select2 form-select shadow-none"
-                                            style="width: 100%; height: 36px">
+                                            style="width: 100%; height: 36px"
+                                            @if(Auth::guard('representative')->check()) disabled @endif>
+                                            >
+                                            
                                             <option value="">اختر العميل</option>
                                             @foreach ($withData as $item)
                                                 <option value="{{ $item->id }}" {{ (isset($data) && $data->client->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
@@ -76,6 +80,7 @@
                                           type="text"
                                           class="form-control mydatepicker"
                                           placeholder="mm/dd/yyyy"
+                                          @if(Auth::guard('representative')->check()) readonly @endif
                                         />
 
                                           <div class="input-group-append">
@@ -101,6 +106,7 @@
                                       id="lname"
                                       placeholder="ملاحظات"
                                       value="{{ isset($data)? $data->notes : '' }}"
+                                      @if(Auth::guard('representative')->check()) readonly @endif
                                       />
                                   </div>
                               </div>
@@ -200,6 +206,7 @@
                                         data-price="{{ $item['price'] }}" 
                                         data-name="{{ $item['name'] }}" 
                                         data-id="{{ $item['id'] }}"
+                                        @if(Auth::guard('representative')->check()) disabled @endif
                                         @if(isset($data) && $data->items->pluck('product_id')->contains($item['id'])) 
                                           checked 
                                         @endif
@@ -242,13 +249,17 @@
                                                             <td class="hide id">{{ $item->product_id }}</td>
                                                             <td class="label_name">{{ $item->product->name }}</td>
                                                             <td class="button-cell">
-                                                                <button type="button" class="quantity-button" onclick="increment(this)">+</button>
+                                                                <button type="button" class="quantity-button" onclick="increment(this)"
+                                                                @if(Auth::guard('representative')->check()) disabled @endif
+                                                                >+</button>
                                                             </td>
                                                             <td>
                                                                 <span class="quantity">{{ $item->quantity }}</span>
                                                             </td>
                                                             <td class="button-cell">
-                                                                <button type="button" class="quantity-button" onclick="decrement(this)">-</button>
+                                                                <button type="button" class="quantity-button" onclick="decrement(this)"
+                                                                @if(Auth::guard('representative')->check()) disabled @endif
+                                                                >-</button>
                                                             </td>
                                                             <td class="price">{{ $item->price }}</td>
                                                             <td class="total">{{ $item->price * $item->quantity }}</td>

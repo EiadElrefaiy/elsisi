@@ -25,6 +25,12 @@ class ReadController extends Controller
             // Eager load relationships based on the model class
             $data = $modelClass::with($this->getRelationships($modelClass))->get();
     
+            if ($view == "returns.index") {
+              $deliveriesModel = $this->getModelClass("delivery");
+              $deliveries = $deliveriesModel::get();
+              return view($view, compact('data' , 'deliveries'));
+            }
+
             if ($view == "representatices_days.index") {
                 // Fetch all unique dates for which there is representative data
                 $uniqueDates = $money::selectRaw('DATE(created_at) as date')

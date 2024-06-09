@@ -41,8 +41,8 @@
              @if (Illuminate\Support\Str::contains($delivery->created_at, $formattedDate))
                 <tr id="dataRow_{{$item->id}}">
                     <td>{{$delivery->offer->offer_num}}</td>
-                    <td>{{$delivery->representative->name}}</td>
                     <td>{{$delivery->offer->client->name}}</td>
+                    <td>{{$delivery->representative->name}}</td>
                     <td>{{$delivery->offer->client->phone}}</td>
                     <td>{{$delivery->offer->client->state}}</td>
                     <td>{{$delivery->offer->client->address}}</td>

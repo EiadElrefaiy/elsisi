@@ -80,7 +80,14 @@
            </tr>
          </thead>
          <tbody class="customtable" id="tableBody">
-         @foreach ($data as $item)
+          
+        @php
+         if(Auth::guard('representative')->check()){
+          $list = $deliveries->where("representative_id" , Auth::guard('representative')->user()->id)->pluck("offer_id");
+         }
+        @endphp
+
+         @foreach ( Auth::guard('representative')->check() ? $data->whereIn("offer_id" , $list) : $data as $item)
             <tr id="dataRow_{{ $item->id }}" class="dataRow">
              <td>{{$item->offer->offer_num}}</td>
              <td>{{$item->product->name}}</td>

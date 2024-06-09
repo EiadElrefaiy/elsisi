@@ -61,6 +61,7 @@
                                         <div class="col-md-9">
                                         <div class="input-group">
                                           <input
+                                            value = "{{date('m/d/Y')}}"
                                             name="created_at"
                                             type="text"
                                             class="form-control mydatepicker"

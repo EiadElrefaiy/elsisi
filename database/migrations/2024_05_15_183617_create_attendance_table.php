@@ -16,10 +16,10 @@ class CreateAttendanceTable extends Migration
         Schema::create('attendance', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
-            $table->time('from');
-            $table->time('to');
-            $table->date('date');
+            $table->time('from')->nullable();
+            $table->time('to')->nullable();
             $table->enum('operation', ['attendance', 'absence']);
+            $table->string('notes');
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');

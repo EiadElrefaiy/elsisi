@@ -42,7 +42,7 @@
                 <div class="col-sm-12">
                     <div class="pull-right text-end">
                         <address>
-                            <h3>الاسم : {{ $data->client->name }}</h3>
+                            <h3>اسم العميل : {{ $data->client->name }}</h3>
                         </address>
                     </div>
                 </div>
@@ -76,11 +76,27 @@
                 </div>
                 <div class="col-12 mt-4">
                     <div class="row">
+                        <h2>المنتجات</h2>
                         @foreach($data->items as $item)
                             <div class="col-sm-6">
                                 <h4>{{$item->quantity}} {{ $item->product->name }}</h4>
                             </div>
                         @endforeach
+                        <hr>
+                        <h2>المرتجعات</h2>
+                        @php
+                            $totalReturns = 0;
+                        @endphp
+
+                        @foreach($data->returns as $item)
+                            @php
+                                $totalReturns += $item->price * $item->quantity;
+                            @endphp
+                            <div class="col-sm-6">
+                                <h4>{{ $item->quantity }} {{ $item->product->name }}</h4>
+                            </div>
+                        @endforeach
+
                     </div>
                 </div>
                 <div class="col-sm-12 mt-4">
@@ -88,17 +104,23 @@
                 </div>
                 <div class="col-sm-12 mt-4" style="border: 1px solid black; font-size: 20px; font-weight: bold; padding: 0px 20px;">
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             سعر العرض
                         </div>
-                        <div class="col-sm-3" style="border-left: 1px solid black;">                           
+                        <div class="col-sm-2" style="border-left: 1px solid black;">                           
                            {{ $data->total }} ج
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
+                            المرتجعات
+                        </div>
+                        <div class="col-sm-2" style="border-left: 1px solid black;">     
+                           {{ $totalReturns }} ج
+                        </div>
+                        <div class="col-sm-2">
                             مصاريف الشحن
                         </div>
-                        <div class="col-sm-3">
-                            لم يتم الشحن  
+                        <div class="col-sm-2">
+                            {{ $data->deliveries->where("offer_id" , $data->id)->sum(['price']) }}  
                         </div>
                     </div>
                 </div>
@@ -108,7 +130,7 @@
                             الاجمالي
                         </div>
                         <div class="col-sm-2" style="border-left: 1px solid black;">
-                            {{ $data->total }} ج
+                            {{ $data->total - $totalReturns}} ج
                         </div>
                         <div class="col-sm-2">
                             خالص

@@ -69,16 +69,16 @@
             @foreach ($data as $item)
             <tr id="dataRow_{{ $item['id'] }}">
               <td>{{ $item->invoice_num}}</td>
-              <td>{{ $item->supplier->name }}</td>
-              <td>{{ $item->supplier->phone }}</td>
-              <td>{{ $item->supplier->address }}</td>
+              <td>{{ $item->supplier ?  $item->supplier->name : 'لا يوجد' }}</td>
+              <td>{{$item->supplier ?  $item->supplier->phone : 'لا يوجد' }}</td>
+              <td>{{$item->supplier ?  $item->supplier->address : 'لا يوجد' }}</td>
               <td>{{ $item->total }}</td>
               <td>{{ $item->payed }}</td>
               <td>{{ $item->total - $item->payed}}</td>
               <td class="date-cell">{{ $item->created_at->format('Y-m-d') }}</td>
               <td>
-                <span class="badge {{ $item->status == 0 ? 'bg-warning' : 'bg-success' }}">
-                {{ $item->status == 0 ? 'متبقي له' : 'خالص' }}
+                <span class="badge {{ !$item->total - $item->payed == 0 ? 'bg-warning' : 'bg-success' }}">
+                {{ !$item->total - $item->payed == 0 ? 'متبقي له' : 'خالص' }}
                 </span>
               </td>
               <td>

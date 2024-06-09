@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as AuthenticatableUser;
+use Illuminate\Notifications\Notifiable;
 
-class Representative extends Model
+class Representative extends AuthenticatableUser
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+
+    protected $guarded = [];
 
     protected $fillable = [
         'name',
