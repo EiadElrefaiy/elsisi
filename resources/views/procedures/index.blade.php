@@ -17,6 +17,7 @@
                           ><i class=" fas fa-search"></i></span>
                       </div>
                       <input
+                        id="searchText"
                         type="text"
                         class="form-control"
                         placeholder="بحث"
@@ -106,7 +107,7 @@
                                 <th scope="col"></th>
                             </tr>
                         </thead>
-                        <tbody class="customtable">
+                        <tbody class="customtable discounts">
                                 @php
                                 $totalDiscount = 0;
                                 @endphp
@@ -117,7 +118,7 @@
                                 @endphp
                                 <tr id="dataRow_{{ $item->id }}" class="dataRow">
                                 <td>{{ $item->employee->name }}</td>
-                                <td>{{ $item->price }} ج</td>
+                                <td class="price">{{ $item->price }} ج</td>
                                 <td>{{ $item->description }}</td>
                                 <td class="date">{{ $item->created_at->format('Y-m-d') }}</td>
                                 <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'procedures.discounts.edit','table' => 'procedures' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>
@@ -132,7 +133,7 @@
 
                             <tr>
                                 <td colspan="4">الاجمالي</td>
-                                <td>{{ $totalDiscount }} ج</td>
+                                <td id="totalDiscount">{{ $totalDiscount }} ج</td>
                             </tr>
 
                   </tbody>
@@ -164,7 +165,7 @@
                                 <th scope="col"></th>
                             </tr>
                         </thead>
-                        <tbody class="customtable">
+                        <tbody class="customtable rewards">
                                 @php
                                 $totalReward = 0;
                                 @endphp
@@ -175,7 +176,7 @@
                                 @endphp
                                 <tr id="dataRow_{{ $item->id }}" class="dataRow">
                                 <td>{{ $item->employee->name }}</td>
-                                <td>{{ $item->price }} ج</td>
+                                <td class="price">{{ $item->price }} ج</td>
                                 <td>{{ $item->description }}</td>
                                 <td class="date">{{ $item->created_at->format('Y-m-d') }}</td>
                                 <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'procedures.rewards.edit' , 'id'=> $item->id , 'table'=>'procedures']) }}"><i class="mdi mdi-grease-pencil"></i></a>
@@ -189,7 +190,7 @@
                             @endforeach
                             <tr>
                                 <td colspan="4">الاجمالي</td>
-                                <td>{{ $totalReward }} ج</td>
+                                <td id="totalReward">{{ $totalReward }} ج</td>
                             </tr>
 
                   </tbody>
@@ -212,26 +213,42 @@
      @include('js.index')
 
      <script>
-    $(document).ready(function() {
-        $('#searchButton').on('click', function() {
-            var from_date = $('#from_date').val();
-            var to_date = $('#to_date').val();
+$(document).ready(function() {
+    $('#searchButton').on('click', function() {
+        var query = $('#searchText').val().toLowerCase();
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
 
-            var fromDate = new Date(from_date);
-            var toDate = new Date(to_date);
+        var fromDate = new Date(from_date);
+        var toDate = new Date(to_date);
 
-            $('.dataRow').each(function() {
-                var date = $(this).find('.date').text();
-                var rowDate = new Date(date);
+        var totalDiscount = 0;
+        var totalReward = 0;
 
-                if (rowDate >= fromDate && rowDate <= toDate) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
+        $('.dataRow').each(function() {
+            var date = $(this).find('.date').text();
+            var rowDate = new Date(date);
+
+            var textMatch = $(this).text().toLowerCase().indexOf(query) !== -1;
+            var dateMatch = rowDate >= fromDate && rowDate <= toDate;
+
+            if (textMatch && dateMatch) {
+                $(this).show();
+                if ($(this).parent().hasClass('discounts')) {
+                    totalDiscount += parseFloat($(this).find('.price').text());
+                } else if ($(this).parent().hasClass('rewards')) {
+                    totalReward += parseFloat($(this).find('.price').text());
                 }
-            });
+            } else {
+                $(this).hide();
+            }
         });
+
+        // Update total values
+        $('#totalDiscount').text(totalDiscount.toFixed(2));
+        $('#totalReward').text(totalReward.toFixed(2));
     });
+});
   </script>
 
 @endsection

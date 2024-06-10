@@ -19,7 +19,7 @@
                   @if(auth()->user()->image)
                       <img src="{{ Storage::url('public/' . auth()->user()->image) }}" alt="User Picture">
                   @else
-                      <img src="{{ asset('assets/images/default-user-image.png') }}" alt="User Picture">
+                      <img src="{{ asset('assets/images/businessman.png') }}" alt="User Picture">
                   @endif
                 
                 @else

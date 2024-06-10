@@ -1,14 +1,15 @@
 <header class="topbar" data-navbarbg="skin5">
         <nav class="navbar top-navbar navbar-expand-md navbar-dark">
           <div class="navbar-header" data-logobg="skin5">
-            <a  onclick=""
-            class="nav-toggler waves-effect waves-light d-block d-md-none"
-            href="javascript:void(0)"
-            ><i class="mdi mdi-bell" style="font-size: 20px;"></i></a>
-            <a  onclick=""
+          <a  onclick=""
             class="nav-toggler waves-effect waves-light d-block d-md-none"
             href="javascript:void(0)"
             ><i class="mdi mdi-logout" style="font-size: 20px;"></i></a>
+            <a  onclick=""
+            class="nav-toggler waves-effect waves-light d-block d-md-none"
+            href="javascript:void(0)"
+            ><i style="visibility: hidden;" class="mdi mdi-bell" style="font-size: 20px;"></i></a>
+           
 
             <!-- ============================================================== -->
             <!-- Logo -->
@@ -84,7 +85,7 @@
               <!-- ============================================================== -->
               <li dir="ltr" class="nav-item dropdown" id="timeDropdown" style="color: white; font-weight: bold; margin-left: 20px; margin-top: 21px;">
               </li>
-              <li class="nav-item dropdown">
+              <li style="visibility: hidden;" class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
                   href="#"

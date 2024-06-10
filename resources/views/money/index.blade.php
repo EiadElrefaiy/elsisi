@@ -111,18 +111,18 @@
                   @php
                   $total += $item->price;
                   @endphp
-                  <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                  <tr id="dataRow_{{ $item->id }}" class="dataRow revenueRow">
                       <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . $item->representative->name}}</td>
                       <td>{{ $item->description }}</td>
-                      <td>{{ $item->price }} ج</td>
+                      <td class='price'>{{ $item->price }} ج</td>
                       <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
                       <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'money.revenues.edit' , 'table' => 'money' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'money')"><i class="mdi mdi-delete"></i></a></td>
                   </tr>
                   @endforeach
 
                   <tr>
-                      <td colspan="3">الاجمالي</td>
-                      <td>{{ $total }} ج</td>
+                      <td colspan="4">الاجمالي</td>
+                      <td id="totalRevenues">{{ $total }} ج</td>
                   </tr>
                 </tbody>
                 </table>
@@ -160,18 +160,18 @@
                   @php
                   $total += $item->price;
                   @endphp
-                  <tr id="dataRow_{{ $item->id }}" class="dataRow">
+                  <tr id="dataRow_{{ $item->id }}" class="dataRow expenseRow">
                       <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . $item->representative->name}}</td>
                       <td>{{ $item->description }}</td>
-                      <td>{{ $item->price }} ج</td>
+                      <td class='price'>{{ $item->price }} ج</td>
                       <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
                       <td><a style="color: #3e5569;" href="{{ route('edit', ['view' => 'money.expenses.edit' , 'table' => 'money' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp; <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'money')"><i class="mdi mdi-delete"></i></a></td>
                   </tr>
                   @endforeach
 
                   <tr>
-                      <td colspan="3">الاجمالي</td>
-                      <td>{{ $total }} ج</td>
+                      <td colspan="4">الاجمالي</td>
+                      <td id="totalExpenses">{{ $total }} ج</td>
                   </tr>
                   </tbody>
                 </table>
@@ -197,36 +197,47 @@
      @include('js.index')
 
      <script>
-  $(document).ready(function() {
-      $('#searchButton').on('click', function() {
-          var from_date = $('#from_date').val();
-          var to_date = $('#to_date').val();
-          var searchText = $('#searchInput').val().toLowerCase();
+$(document).ready(function() {
+    $('#searchButton').on('click', function() {
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        var searchText = $('#searchInput').val().toLowerCase();
 
-          var fromDate = new Date(from_date);
-          var toDate = new Date(to_date);
+        var fromDate = new Date(from_date);
+        var toDate = new Date(to_date);
 
-          $('.dataRow').each(function() {
-              var date = $(this).find('.date').text();
-              var rowDate = new Date(date);
-              var rowMatchesSearch = false;
+        var totalRevenues = 0;
+        var totalExpenses = 0;
 
-              $(this).find('td').each(function() {
-                  var cellText = $(this).text().toLowerCase();
-                  if (cellText.includes(searchText)) {
-                      rowMatchesSearch = true;
-                      return false; // Exit the loop early since we found a match
-                  }
-              });
+        $('.dataRow').each(function() {
+            var date = $(this).find('.date').text();
+            var rowDate = new Date(date);
+            var rowMatchesSearch = false;
 
-              if (rowDate >= fromDate && rowDate <= toDate && (searchText === '' || rowMatchesSearch)) {
-                  $(this).show();
-              } else {
-                  $(this).hide();
-              }
-          });
-      });
-  });
+            $(this).find('td').each(function() {
+                var cellText = $(this).text().toLowerCase();
+                if (cellText.includes(searchText)) {
+                    rowMatchesSearch = true;
+                    return false; // Exit the loop early since we found a match
+                }
+            });
+
+            if (rowDate >= fromDate && rowDate <= toDate && (searchText === '' || rowMatchesSearch)) {
+                $(this).show();
+                if ($(this).hasClass('revenueRow')) {
+                    totalRevenues += parseFloat($(this).find('.price').text());
+                } else if ($(this).hasClass('expenseRow')) {
+                    totalExpenses += parseFloat($(this).find('.price').text());
+                }
+            } else {
+                $(this).hide();
+            }
+        });
+
+        $('#totalRevenues').text(totalRevenues.toFixed(2) + ' ج');
+        $('#totalExpenses').text(totalExpenses.toFixed(2) + ' ج');
+    });
+});
 </script>
 
 @endsection

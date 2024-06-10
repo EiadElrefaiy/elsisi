@@ -148,7 +148,59 @@
                 </td>
             </tr>
             @endforeach
+        </tbody>
+      </table>
+
+      @if(auth()->check() && auth()->user()->position == 1)
+
+        <table class="table">
+        <thead class="thead-light">
             <tr>
+                <th scope="col">رقم العرض</th>
+                <th scope="col">سعر العرض</th>
+                <th scope="col">المرتجعات</th>
+                <th scope="col">الاجمالي</th>
+                <th scope="col">المدفوع من الاجمالي</th>
+                <th scope="col">المتبقي من الاجمالي</th>
+            </tr>
+        </thead>
+        <tbody class="customtable">
+            
+        @foreach ($data as $item)        
+        @php
+            $totalReturns =  $returns->where('offer_id', $item->id)->map(function($return) {
+                            return $return->price * $return->quantity;
+                        })->sum();
+       @endphp
+
+            <tr id="dataRow_{{ $item['id'] }}">
+                <td>{{ $item->offer_num}}</td>
+
+                <td class="hide">{{ $item->client->name }}</td>
+                <td class="hide">{{ $item->client->phone }}</td>
+                <td class="hide">{{ $item->client->state}}</td>
+                <td class="hide">{{ $item->client->address }}</td>
+                <td class="hide">{{ $item->notes == null ? '................' : $item->notes}}</td>
+                <td class="date-cell hide">{{ $item->created_at->format('Y-m-d') }}</td>
+                <td class="hide">
+                    <span class="badge {{ $item->state == 0 ? 'bg-warning' : ($item->state == 1 ? 'bg-success' : ($item->state == 2 ? 'bg-danger' : '')) }}">
+                    {{ $item->state == 0 ? 'قيد الشحن' : ($item->state == 1 ? 'تم التسليم' : ($item->state == 2 ? 'رفض الاستلام' : '')) }}
+                    </span>
+                </td>
+                <td class="hide">
+                    <span class="badge {{ $item->financial_state == 1 ? 'bg-success' : ($item->financial_state == 0 ? 'bg-warning' : ($item->financial_state == 2 ? 'bg-danger' : ($item->financial_state == 3 ? 'bg-warning' : '' ))) }}">
+                    {{ $item->financial_state == 1 ? 'مدفوع' : ($item->financial_state == 0 ? 'عند الاستلام' : ($item->financial_state == 2 ? 'مرفوض' : ($item->financial_state == 3 ? 'متبقي' : '' ))) }}
+                    </span>
+                </td>
+
+                <td class="offer-total">{{ $item->total }}</td>
+                <td class="returns-total">{{ $totalReturns }}</td>
+                <td class="net-total">{{ $item->total - $totalReturns }}</td>
+                <td class="payment-total">{{ $item->payed}}</td>
+                <td class="remaining-total">{{ $item->total - $totalReturns - $item->payed }}</td>
+            </tr>
+            @endforeach
+            <!--tr>
                 <td >اجمالي العروض</td>
                 <td>{{$data->sum("total")}} ج</td>
                 <td>اجمالي المرتجعات</td>
@@ -166,9 +218,11 @@
                 <td>{{$totalReturns}} ج</td>
                 <td>الاجمالي</td>
                 <td>{{$data->sum("total") - $totalReturns}} ج</td>
-            </tr>
+            </tr-->
         </tbody>
       </table>
+      @endif
+      
      </div>
    </div>
   </div>

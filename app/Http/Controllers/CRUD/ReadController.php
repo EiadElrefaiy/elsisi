@@ -24,6 +24,12 @@ class ReadController extends Controller
         if ($modelClass) {
             // Eager load relationships based on the model class
             $data = $modelClass::with($this->getRelationships($modelClass))->get();
+
+            if ($view == "offers.index") {
+                $returnsModel = $this->getModelClass("returns");
+                $returns = $returnsModel::get();
+                return view($view, compact('data' , 'returns'));
+            }
     
             if ($view == "returns.index") {
               $deliveriesModel = $this->getModelClass("delivery");

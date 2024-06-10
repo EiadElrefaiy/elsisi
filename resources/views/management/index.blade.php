@@ -50,13 +50,20 @@
                             <td>{{ $item['name'] }}</td>
                             <td>{{ $item['phone'] }}</td>
                             <td>{{ $item['position'] == 1 ? 'ادمن' : 'مشرف'}}</td>
+
                             <td>
-                                <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'management.edit' , 'table' => 'users' , 'id' => $item['id'] ]) }}">
-                                    <i class="mdi mdi-grease-pencil"></i>
-                                </a>&nbsp;&nbsp;
-                                <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item['id'] }}', 'users')">
-                                    <i class="mdi mdi-delete"></i>
-                                </a>
+                                @if($item['id'] != auth()->user()->id && auth()->user()->position == 1)
+                                    <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'management.edit' , 'table' => 'users' , 'id' => $item['id'] ]) }}">
+                                        <i class="mdi mdi-grease-pencil"></i>
+                                    </a>&nbsp;&nbsp;
+                                    <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item['id'] }}', 'users')">
+                                        <i class="mdi mdi-delete"></i>
+                                    </a>
+                                @elseif($item['id'] == auth()->user()->id)
+                                    <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'management.edit' , 'table' => 'users' , 'id' => $item['id'] ]) }}">
+                                        <i class="mdi mdi-grease-pencil"></i>
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
