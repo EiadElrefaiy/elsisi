@@ -90,34 +90,41 @@
                                             }
 
                                             if ($showItem) {
-                                                $totalAmount += $item->offer->total + $item->price;
+                                                $totalAmount += ($item->offer ? $item->offer->total : 0) + $item->price;
                                             }
                                         @endphp
 
                                         @if ($showItem)
                                             <tr id="dataRow_{{ $item->id }}">
-                                                <td>{{ $item->offer->offer_num }}</td>
-                                                <td>{{ $item->offer->name }}</td>
-                                                <td>{{ $item->representative->name }}</td>
-                                                <td>{{ $item->offer->client->name }}</td>
-                                                <td>{{ $item->offer->client->phone }}</td>
-                                                <td>{{ $item->offer->client->state }}</td>
+                                                <td>{{ $item->offer ? $item->offer->offer_num : 'لا يوجد'}}</td>
+                                                <td>{{ $item->offer ? $item->offer->name : 'لا يوجد' }}</td>
+                                                <td>{{ $item->representative ? $item->representative->name : 'لا يوجد'}}</td>
+                                                <td>{{ $item->offer ? $item->offer->client->name : 'لا يوجد'}}</td>
+                                                <td>{{ $item->offer ? $item->offer->client->phone : 'لا يوجد'}}</td>
+                                                <td>{{ $item->offer ? $item->offer->client->state : 'لا يوجد'}}</td>
                                                 <td>{{ $itemDate }}</td>
                                                 <td>{{ $item->line }}</td>
-                                                <td>{{ $item->offer->total }} ج</td>
+                                                <td>{{ $item->offer ? $item->offer->total : 0 }} ج</td>
                                                 <td>{{ $item->price }} ج</td>
-                                                <td>{{ $item->offer->total + $item->price }} ج</td>
+                                                <td>{{ ($item->offer ? $item->offer->total : 'لا يوجد') + $item->price }} ج</td>
+
                                                 <td>
-                                                    <span class="badge {{ $item->offer->state == 0 ? 'bg-warning' : ($item->offer->state == 1 ? 'bg-success' : ($item->offer->state == 2 ? 'bg-danger' : '')) }}">
+                                                  @if($item->offer)
+                                                  <span class="badge {{ $item->offer->state == 0 ? 'bg-warning' : ($item->offer->state == 1 ? 'bg-success' : ($item->offer->state == 2 ? 'bg-danger' : '')) }}">
                                                     {{ $item->offer->state == 0 ? 'قيد الشحن' : ($item->offer->state == 1 ? 'تم التسليم' : ($item->offer->state == 2 ? 'رفض الاستلام' : '')) }}
                                                     </span>
+                                                  @endif
                                                 </td>
+
+                                                
                                                 <td>
+                                                @if($item->offer)
                                                 <a style="color: #3e5569;" href="{{ route('offer_print', ['view' => 'offers.offer_print', 'table' => 'offers', 'id' => $item->offer->id ]) }}"><i class="mdi mdi-eye"></i></a>
                                                   &nbsp;&nbsp;<a style="color: #3e5569;" href="{{ route('edit', ['view' => 'offers.edit', 'table' => 'offers' ,'id' => $item->offer->id ]) }}"><i class="mdi mdi-pencil"></i></a>
+                                                  @endif
                                                 </td>
+                                                
                                                 <td>
-
                                                   <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'delivery.edit' , 'table' => 'delivery' ,'id' => $item->id ]) }}">
                                                   <i class="mdi mdi-pencil"></i>
                                                   </a>

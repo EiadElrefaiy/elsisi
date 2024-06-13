@@ -117,7 +117,7 @@
                                 $totalDiscount += $item->price;
                                 @endphp
                                 <tr id="dataRow_{{ $item->id }}" class="dataRow">
-                                <td>{{ $item->employee->name }}</td>
+                                <td>{{ $item->employee ? $item->employee->name : 'لا يوجد'}}</td>
                                 <td class="price">{{ $item->price }} ج</td>
                                 <td>{{ $item->description }}</td>
                                 <td class="date">{{ $item->created_at->format('Y-m-d') }}</td>
@@ -175,7 +175,7 @@
                                 $totalReward += $item->price;
                                 @endphp
                                 <tr id="dataRow_{{ $item->id }}" class="dataRow">
-                                <td>{{ $item->employee->name }}</td>
+                                <td>{{ $item->employee ? $item->employee->name : 'لا يوجد'}}</td>
                                 <td class="price">{{ $item->price }} ج</td>
                                 <td>{{ $item->description }}</td>
                                 <td class="date">{{ $item->created_at->format('Y-m-d') }}</td>

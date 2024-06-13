@@ -37,7 +37,7 @@
                                             style="width: 100%; height: 36px">
                                             <option value="">اختر المورد</option>
                                             @foreach ($withData as $item)
-                                                <option value="{{ $item->id }}" {{ (isset($data) && $data->supplier->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
+                                                <option value="{{ $item->id }}" {{ ($data->supplier && isset($data) && $data->supplier->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
                                             @endforeach
                                           </select>
                                           <input class="hide" id="supplier_id" name="supplier_id" type="text" value="{{ $data->supplier_id }}"/>

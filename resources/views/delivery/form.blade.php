@@ -24,10 +24,10 @@
                                             style="width: 100%; height: 36px">
                                             <option>اختر المندوب</option>
                                             @foreach ( Auth::guard('representative')->check() ? $withData->where('id' , Auth::guard('representative')->user()->id) : $withData as $item)
-                                            <option value="{{ $item->id }}" {{ (isset($data) && $data->representative->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}" {{ ($data->representative && isset($data) && $data->representative->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
                                             @endforeach
                                             </select>
-                                            <input class="hide" name="representative_id" type="text" value="{{ isset($data) ? $data->representative_id : '' }}"/>
+                                            <input class="hide" name="representative_id" type="text" value="{{ ( $data->representative && isset($data)) ? $data->representative_id : '' }}"/>
                                         </div>
                                       </div> 
                                 </div>
@@ -46,7 +46,7 @@
                                             style="width: 100%; height: 36px">
                                             <option>اختر العرض</option>
                                             @foreach ($withData2 as $item)
-                                            <option value="{{ $item->id }}" {{ (isset($data) && $data->offer->offer_num == $item->offer_num) ? 'selected' : '' }}>{{ $item->offer_num }}</option>
+                                            <option value="{{ $item->id }}" {{ (isset($data) && $data->offer->offer_num == $item->offer_num && $data->offer) ? 'selected' : '' }}>{{ $item->offer_num }}</option>
                                             @endforeach
                                             </select>
                                             <input class="hide" name="offer_id" type="text" value="{{ isset($data) ? $data->offer_id : '' }}"/>

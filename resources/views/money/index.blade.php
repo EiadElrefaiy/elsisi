@@ -112,7 +112,7 @@
                   $total += $item->price;
                   @endphp
                   <tr id="dataRow_{{ $item->id }}" class="dataRow revenueRow">
-                      <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . $item->representative->name}}</td>
+                  <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . ($item->representative ? $item->representative->name : 'لا يوجد')}}</td>
                       <td>{{ $item->description }}</td>
                       <td class='price'>{{ $item->price }} ج</td>
                       <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
@@ -161,7 +161,7 @@
                   $total += $item->price;
                   @endphp
                   <tr id="dataRow_{{ $item->id }}" class="dataRow expenseRow">
-                      <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . $item->representative->name}}</td>
+                      <td>{{ $item->representative_id == 0 ? 'ادارة'  : 'مندوب: ' . ($item->representative ? $item->representative->name : 'لا يوجد')}}</td>
                       <td>{{ $item->description }}</td>
                       <td class='price'>{{ $item->price }} ج</td>
                       <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>

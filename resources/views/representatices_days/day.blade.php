@@ -40,14 +40,14 @@
              @endphp
              @if (Illuminate\Support\Str::contains($delivery->created_at, $formattedDate))
                 <tr id="dataRow_{{$item->id}}">
-                    <td>{{$delivery->offer->offer_num}}</td>
-                    <td>{{$delivery->offer->client->name}}</td>
-                    <td>{{$delivery->representative->name}}</td>
-                    <td>{{$delivery->offer->client->phone}}</td>
-                    <td>{{$delivery->offer->client->state}}</td>
-                    <td>{{$delivery->offer->client->address}}</td>
-                    <td>{{$delivery->offer->total}} ج</td>
-                    <td>{{$delivery->offer->created_at->format('Y-m-d')}}</td>
+                    <td>{{$delivery->offer ? $delivery->offer->offer_num : 'لا يوجد'}}</td>
+                    <td>{{$delivery->offer ? $delivery->offer->client->name : 'لا يوجد'}}</td>
+                    <td>{{$delivery->offer ? $delivery->representative->name : 'لا يوجد'}}</td>
+                    <td>{{$delivery->offer ? $delivery->offer->client->phone : 'لا يوجد'}}</td>
+                    <td>{{$delivery->offer ? $delivery->offer->client->state : 'لا بوجد'}}</td>
+                    <td>{{$delivery->offer ? $delivery->offer->client->address : 'لا يوجد'}}</td>
+                    <td>{{$delivery->offer ? $delivery->offer->total : 'لا يوجد'}} ج</td>
+                    <td>{{$delivery->offer ? $delivery->offer->created_at->format('Y-m-d') : 'لا يوجد'}}</td>
                     <td>{{$delivery->created_at->format('Y-m-d')}}</td>
                     <td>{{$delivery->line}}</td>
                 </tr>

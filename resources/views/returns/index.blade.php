@@ -89,8 +89,8 @@
 
          @foreach ( Auth::guard('representative')->check() ? $data->whereIn("offer_id" , $list) : $data as $item)
             <tr id="dataRow_{{ $item->id }}" class="dataRow">
-             <td>{{$item->offer->offer_num}}</td>
-             <td>{{$item->product->name}}</td>
+             <td>{{$item->offer ? $item->offer->offer_num : 'لا يوجد'}}</td>
+             <td>{{$item->product ? $item->product->name : 'لا يوجد'}}</td>
              <td>{{$item->price}} ج</td>
              <td>{{$item->quantity}}</td>
              <td>{{$item->price * $item->quantity}} ج</td>

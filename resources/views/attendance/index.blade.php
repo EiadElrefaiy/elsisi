@@ -111,7 +111,7 @@
                             $totalDays++;
                         @endphp
                         <tr id="dataRow_{{ $item->id }}" class="dataRow attendance-row">
-                            <td class="name">{{ $item->employee->name }}</td>
+                            <td class="name">{{ $item->employee ? $item->employee->name : 'لا يوجد'}}</td>
                             <td dir="ltr">{{ $from->format('h:i A') }}</td>
                             <td dir="ltr">{{ $to->format('h:i A') }}</td>
                             <td class="hours">{{ $diffInHours }} ساعة</td>
@@ -174,7 +174,7 @@
                       $totalAbsenceDays++;
                       @endphp
                       <tr id="dataRow_{{ $item->id }}" class="dataRow absence-row">
-                          <td class="name">{{ $item->employee->name }}</td>
+                          <td class="name">{{ $item->employee ? $item->employee->name : 'لا يوجد'}}</td>
                           <td class="date">{{ $item->created_at->format('Y-m-d') }}</td>
                           <td>{{ isset($item->notes) ? $item->notes : '____________' }}</td>
                           <td>

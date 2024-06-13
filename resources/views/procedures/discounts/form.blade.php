@@ -24,10 +24,10 @@
                                             style="width: 100%; height: 36px">
                                             <option>اختر الموظف</option>
                                             @foreach ($withData as $item)
-                                                <option value="{{ $item->id }}" {{ (isset($data) && $data->employee->name == $item->name) ? 'selected' : '' }}> {{ $item->name }}</option>
+                                                <option value="{{ $item->id }}" {{ ($data->employee && isset($data) && $data->employee->name == $item->name) ? 'selected' : '' }}> {{ $item->name }}</option>
                                             @endforeach
                                             </select>
-                                            <input class="hide" name="employee_id" id="employee_id" type="text" value="{{  (isset($data) && $data->employee->id) ?  $data->employee->id : ''}}">
+                                            <input class="hide" name="employee_id" id="employee_id" type="text" value="{{  ( $data->employee && isset($data) && $data->employee->id) ?  $data->employee->id : ''}}">
                                         </div>
                                       </div> 
                                 </div>

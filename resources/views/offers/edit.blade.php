@@ -58,7 +58,7 @@
                                             
                                             <option value="">اختر العميل</option>
                                             @foreach ($withData as $item)
-                                                <option value="{{ $item->id }}" {{ (isset($data) && $data->client->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
+                                                <option value="{{ $item->id }}" {{ ($data->client && isset($data) && $data->client->name == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
                                             @endforeach
                                           </select>
                                           <input class="hide" id="client_id" name="client_id" type="text" value="{{ $data->client_id }}"/>
@@ -207,7 +207,7 @@
                                         data-name="{{ $item['name'] }}" 
                                         data-id="{{ $item['id'] }}"
                                         @if(Auth::guard('representative')->check()) disabled @endif
-                                        @if(isset($data) && $data->items->pluck('product_id')->contains($item['id'])) 
+                                        @if($data->items && isset($data) && $data->items->pluck('product_id')->contains($item['id'])) 
                                           checked 
                                         @endif
                                       >
@@ -326,7 +326,7 @@
                                         data-price="{{ $item['price'] }}" 
                                         data-name="{{ $item['name'] }}" 
                                         data-id="{{ $item['id'] }}"
-                                        @if(isset($data) && $data->returns->pluck('product_id')->contains($item['id'])) 
+                                        @if($data->returns && isset($data) && $data->returns->pluck('product_id')->contains($item['id'])) 
                                           checked 
                                         @endif
                                       >

@@ -119,10 +119,10 @@
             @foreach ($data as $item)
             <tr id="dataRow_{{ $item['id'] }}">
                 <td>{{ $item->offer_num}}</td>
-                <td>{{ $item->client->name }}</td>
-                <td>{{ $item->client->phone }}</td>
-                <td>{{ $item->client->state}}</td>
-                <td>{{ $item->client->address }}</td>
+                <td>{{ $item->client ? $item->client->name : 'لا يوجد' }}</td>
+                <td>{{ $item->client ? $item->client->phone : 'لا يوجد'}}</td>
+                <td>{{ $item->client ? $item->client->state : 'لا يوجد'}}</td>
+                <td>{{ $item->client ? $item->client->address : 'لا يوجد'}}</td>
                 <td>{{ $item->notes == null ? '................' : $item->notes}}</td>
                 <td class="date-cell">{{ $item->created_at->format('Y-m-d') }}</td>
                 <td >
