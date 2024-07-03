@@ -1,11 +1,11 @@
 <header class="topbar" data-navbarbg="skin5">
         <nav class="navbar top-navbar navbar-expand-md navbar-dark">
           <div class="navbar-header" data-logobg="skin5">
-          <a  onclick=""
+          <a onclick="login();"
             class="nav-toggler waves-effect waves-light d-block d-md-none"
             href="javascript:void(0)"
             ><i class="mdi mdi-logout" style="font-size: 20px;"></i></a>
-            <a  onclick=""
+            <a 
             class="nav-toggler waves-effect waves-light d-block d-md-none"
             href="javascript:void(0)"
             ><i style="visibility: hidden;" class="mdi mdi-bell" style="font-size: 20px;"></i></a>
@@ -23,7 +23,7 @@
               <span class="logo-text ms-2">
                 <!-- dark Logo text -->
                 <img
-                  src="../assets/images/logo-text.png"
+                  src="{{ asset('assets/images/logo-text.png') }}"
                   alt="homepage"
                   class="light-logo"
                   width="120"

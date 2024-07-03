@@ -77,8 +77,8 @@
               <td>{{ $item->total - $item->payed}}</td>
               <td class="date-cell">{{ $item->created_at->format('Y-m-d') }}</td>
               <td>
-                <span class="badge {{ !$item->total - $item->payed == 0 ? 'bg-warning' : 'bg-success' }}">
-                {{ !$item->total - $item->payed == 0 ? 'متبقي له' : 'خالص' }}
+                <span class="badge {{ $item->total - $item->payed == 0 ? 'bg-success' : 'bg-warning' }}">
+                {{ $item->total - $item->payed == 0 ? 'خالص' : 'متبقي له' }}
                 </span>
               </td>
               <td>

@@ -72,9 +72,9 @@
            <tr>
              <th scope="col">العرض</th>
              <th scope="col">المنتج</th>
-             <th scope="col">السعر</th>
              <th scope="col">الكمية</th>
-             <th scope="col">الاجمالي</th>
+             <th scope="col">السعر</th>
+             <th scope="col">ملاحظات</th>
              <th scope="col">التاريخ</th>
              <th scope="col"></th>
            </tr>
@@ -91,9 +91,9 @@
             <tr id="dataRow_{{ $item->id }}" class="dataRow">
              <td>{{$item->offer ? $item->offer->offer_num : 'لا يوجد'}}</td>
              <td>{{$item->product ? $item->product->name : 'لا يوجد'}}</td>
-             <td>{{$item->price}} ج</td>
              <td>{{$item->quantity}}</td>
-             <td>{{$item->price * $item->quantity}} ج</td>
+             <td>{{$item->price}} ج</td>
+             <td>{{$item->notes ? $item->notes  : '_____________________'}}</td>
              <td class="date">{{ $item->created_at->format('Y/m/d') }}</td>
              <td>                      
               <a style="color: #3e5569;" href="javascript:void(0);" onclick="showConfirmDeleteModal('{{ $item->id }}', 'returns')">

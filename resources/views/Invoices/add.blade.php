@@ -67,14 +67,14 @@
                             
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                       <div class="card">
                         <form class="form-horizontal">
                               <div class="card-body">
                                 <div class="row">
                                   <h3 class="card-title mb-2">صورة الفاتورة</h3>
                                   <div class="col-md-12 text-center">
-                                    <a style="position: relative; right: 30px;"><img id="adminImage" width="200" height="200" src="../assets/images/bill.png"></a>
+                                    <a style="position: relative; right: 30px;"><img id="adminImage" width="200" height="200" src="{{asset('assets/images/bill.png')}}"></a>
                                    
                                     <span style="position: relative; top: 95px; left:170px;" class="text-center">
                                       <a href="#">
@@ -89,7 +89,7 @@
                          </form>
                        </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                       <div class="card">
                         <form class="form-horizontal">
                           <div class="card-body">
@@ -97,24 +97,6 @@
                                   <div class="col-sm-6">
                                     <h3 class="card-title mb-2">اصناف المخزن</h3>
                                   </div>
-                                  <div class="col-sm-6">
-                                    <div class="input-group">
-                                      <div class="input-group-append">
-                                        <span class="input-group-text" style="padding: 9.5px;" id="basic-addon2"
-                                          ><i class=" fas fa-search"></i></span>
-                                      </div>
-                                      <input
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="بحث"
-                                        aria-label="Recipient 's username"
-                                        aria-describedby="basic-addon2"
-                                      />
-                                    </div>    
-                    
-                                  </div>
-                                </div>
-
                                   <div class="form-group row">
                                   @foreach ($withData2 as $index => $item)
                                   <div class="col-md-4 col-6">
@@ -147,8 +129,6 @@
                                                               <th scope="col"></th>
                                                               <th scope="col">العدد</th>
                                                               <th scope="col"></th>
-                                                              <th scope="col">السعر</th>
-                                                              <th scope="col">الاجمالي</th>
                                                               <th scope="col"></th>
                                                           </tr>
                                                       </thead>
@@ -165,31 +145,30 @@
                       </div>
 
                       <div class="col-md-12">
-                        <div class="card">
-                            <form class="form-horizontal">
-                               <div class="card-body">
-                           <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group row">
-                              <label
-                                  for="lname"
-                                  class="col-sm-3 text-end control-label col-form-label">المدفوع</label>
-                              <div class="col-sm-9">
-                                  <input
-                                  type="text"
-                                  class="form-control"
-                                  id="payed_form"
-                                  name="payed_form"
-                                  placeholder="المدفوع"
-                                  />
-                              </div>
-                          </div>                   
-                        </div>
-                       </div>
-                      </div>
-                      </form>
-                      </div>
+                    <div class="card">
+                        <form class="form-horizontal">
+                            <div class="card-body">
+                             <div class="row"></div>
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">سعر الطلب</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="total_form" name="total_form" placeholder="سعر الطلب"/>
+                                        </div>
+                                    </div>                   
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">المدفوع</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="payed_form" name="payed_form" placeholder="المدفوع"/>
+                                        </div>
+                                    </div>                   
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                </div>
 
               </div>
            </div>
@@ -206,59 +185,75 @@
 
         @include('js.create')
 
-            <script>
-                $(document).ready(function() {
-                    $('#supplierSelect').on('change', function() {
-                        var selectedSuppliertId = $(this).val();
-                        $('#supplier_id').val(selectedSuppliertId);
-                    });
-                });
-            </script>
+    <script>
+    $(document).ready(function() {
+      $('#supplierSelect').on('change', function() {
+        var selectedSuppliertId = $(this).val();
+            $('#supplier_id').val(selectedSuppliertId);
+      });
 
-            <script>
-                $(document).ready(function() {
-                    $('#payed_form').on('input', function() {
-                        $('#payed').val($(this).val());
-                    });
-                });
-            </script>
-      <script>
-          document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-              checkbox.addEventListener('change', function () {
-                  const id = this.getAttribute('data-id');
-                  const name = this.getAttribute('data-name');
-                  const price = parseFloat(this.getAttribute('data-price'));
+        $('input[type="checkbox"]').on('change', function() {
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+            const price = parseFloat($(this).data('price'));
 
-                  if (this.checked) {
-                      addItemToTable(name, price , id);
-                  } else {
-                      removeItemFromTable(name);
-                  }
-                  updateTotal();
-              });
-          });
+            if ($(this).is(':checked')) {
+                addItemToTable(name, 0, id);
+            } else {
+                removeItemFromTable(name);
+            }
+        });
+
+        // Check all checkboxes and trigger change event on page load
+        $('input[type="checkbox"]').each(function() {
+            $(this).prop('checked', true).trigger('change');
+        });
+
+        $('#payed_form').on('input', function() {
+            $('#payed').val($(this).val());
+        });
+
+        $('#total_form').on('input', function() {
+            $('#total').val($(this).val());
+        });
+
 
           function addItemToTable(label, price , id) {
               const table = document.querySelector('#invoiceTable tbody');
               const row = document.createElement('tr');
               row.setAttribute('data-label', label);
+              if(id == 12 || id == 9 || id == 7){
               row.innerHTML = `
-                  <td class="hide id">${id}</td>
-                  <td class="label_name">${label}</td>
-                  <td class="button-cell">
-                      <button type="button" class="quantity-button" onclick="increment(this)">+</button>
-                  </td>
-                  <td>
-                      <span class="quantity">1</span>
-                  </td>
-                  <td class="button-cell">
-                      <button type="button" class="quantity-button" onclick="decrement(this)">-</button>
-                  </td>
-                  <td class="price">${price}</td>
-                  <td class="total">${price}</td>
-                  
-                  <td></td>
+              <td class="hide id">${id}</td>
+                <td class="label_name">${label}</td>
+                <td class="button-cell">
+                    <button type="button" class="quantity-button" onclick="increment(this)">+</button>
+                </td>
+                <td>
+                    <span class="quantity">1</span>
+                </td>
+                <td class="button-cell">
+                    <button type="button" class="quantity-button" onclick="decrement(this)">-</button>
+                </td>
+                <td> <input style="width:150px;" type="text" class="form-control note" name="notes" placeholder="ملاحظة يدوية"/></td>
               `;
+            }else{
+                row.innerHTML = `
+                <td class="hide id">${id}</td>
+                <td class="label_name">${label}</td>
+                <td class="button-cell">
+                    <button type="button" class="quantity-button" onclick="increment(this)">+</button>
+                </td>
+                <td>
+                    <span class="quantity">1</span>
+                </td>
+                <td class="button-cell">
+                    <button type="button" class="quantity-button" onclick="decrement(this)">-</button>
+                </td>
+                <td> <input style="width:150px;visibility:hidden;" type="text" class="form-control note" name="notes" placeholder="ملاحظة يدوية"/></td>
+              `;
+
+            }
               table.appendChild(row);
           }
 
@@ -291,34 +286,8 @@
                   updateTotal();
               }
           }
+    });
 
-          function updateRowTotal(row) {
-              const quantity = parseInt(row.querySelector('.quantity').textContent);
-              const price = parseFloat(row.querySelector('.price').textContent);
-              const total = quantity * price;
-              row.querySelector('.total').textContent = total;
-          }
-
-          function updateTotal() {
-              const table = document.querySelector('#invoiceTable tbody');
-              let total = 0;
-              table.querySelectorAll('.total').forEach(totalCell => {
-                  total += parseFloat(totalCell.textContent);
-              });
-              const totalRow = document.createElement('tr');
-              totalRow.innerHTML = `
-                  <td colspan="5">اجمالي العرض</td>
-                  <td>${total}</td>
-                  <td></td>
-              `;
-              document.getElementById("total").value = total;
-              const existingTotalRow = table.querySelector('tr.total-row');
-              if (existingTotalRow) {
-                  table.removeChild(existingTotalRow);
-              }
-              totalRow.classList.add('total-row');
-              table.appendChild(totalRow);
-          }
       </script>
 
 @endsection

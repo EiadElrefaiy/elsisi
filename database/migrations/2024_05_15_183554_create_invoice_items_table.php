@@ -19,6 +19,7 @@ class CreateInvoiceItemsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
+            $table->string('notes');
             $table->timestamps();
 
             $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');

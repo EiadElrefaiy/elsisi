@@ -31,7 +31,7 @@ class LoginController extends Controller
             $url = 'index?table=delivery&view=delivery.index';
         }else{
             $guard = 'web';
-            $url = '/';
+            $url = 'index?table=offers&view=offers.index';
         }
 
         if (Auth::guard($guard)->attempt($credentials)) {

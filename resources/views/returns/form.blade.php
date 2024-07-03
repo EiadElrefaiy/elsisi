@@ -15,7 +15,11 @@
                                             <option value="">رقم العرض</option>
 
                                             @php
-                                                $list = $deliveries->where("representative_id" , Auth::guard('representative')->user()->id)->pluck("offer_id");
+                                                if( Auth::guard('representative')->check()){
+                                                    $list = $deliveries->where("representative_id" , Auth::guard('representative')->user()->id)->pluck("offer_id");
+                                                }else{
+                                                    $list = $deliveries->pluck("offer_id");
+                                             }
                                             @endphp
 
                                                 @foreach ( Auth::guard('representative')->check() ? $withData->whereIn("id" , $list) : $withData as $item)
@@ -56,7 +60,41 @@
                                     </div>                   
                                   </div>
 
-                                  <input class="hide" name="price" type="text" value=""/>
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label
+                                            for="lname"
+                                            class="col-sm-3 text-end control-label col-form-label">سعر المرتجع</label>
+                                            <div class="col-sm-9">
+                                            <input
+                                            name="price"
+                                            type="text"
+                                            class="form-control"
+                                            id="lname"
+                                            placeholder="سعر المرتجع"
+                                            />
+                                        </div>
+                                    </div>                   
+                                  </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label
+                                            for="lname"
+                                            class="col-sm-3 text-end control-label col-form-label">ملاحظات</label>
+                                            <div class="col-sm-9">
+                                            <input
+                                            name="notes"
+                                            type="text"
+                                            class="form-control"
+                                            id="lname"
+                                            placeholder="ملاحظات"
+                                            />
+                                        </div>
+                                    </div>                   
+                                  </div>
+
+                                  <input class="hide" name="" type="text" value="0"/>
 
                             </div>
                         </form>

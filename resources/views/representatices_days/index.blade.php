@@ -10,27 +10,28 @@
        <div class="col-sm-12">
          <h3 class="card-title mb-2">يومية المناديب</h3>
        </div>
-       <div class="col-6 mt-2">
+       <div class="col-md-6 mt-2">
          <div class="input-group">
            <div class="input-group-append">
              <span class="input-group-text" style="padding: 9.5px;" id="basic-addon2"
-               ><i class=" fas fa-search"></i></span>
+               ><i class="fas fa-search"></i></span>
            </div>
            <input
              id="searchInput"
              type="text"
              class="form-control"
              placeholder="بحث"
-             aria-label="Recipient 's username"
+             aria-label="Recipient's username"
              aria-describedby="basic-addon2"
            />
          </div>    
        </div>
-       <div class="col-6 mt-2" dir="ltr">
+       <div class="col-md-3 mt-2" dir="rtl">
+         <label for="startDatePicker" class="form-label">من</label>
          <div class="input-group" dir="rtl">
              <input
                type="text"
-               id="datePicker"
+               id="startDatePicker"
                class="form-control mydatepicker"
                placeholder="mm-dd-yyyy"
              />
@@ -40,6 +41,24 @@
               </div>
             </div>
          </div>
+       <div class="col-md-3 mt-2" dir="rtl">
+         <label for="endDatePicker" class="form-label">الى</label>
+         <div class="input-group" dir="rtl">
+             <input
+               type="text"
+               id="endDatePicker"
+               class="form-control mydatepicker"
+               placeholder="mm-dd-yyyy"
+             />
+             <div class="input-group-append">
+               <span class="input-group-text h-100"
+                 ><i class="mdi mdi-calendar"></i></span>
+              </div>
+            </div>
+         </div>
+       <div class="col-12 mt-2">
+         <button id="searchButton" class="btn btn-primary">بحث</button>
+       </div>
       </div>
      </div>
      <div class="table-responsive">
@@ -70,31 +89,27 @@
 
 <script>
     $(document).ready(function(){
-        $('#searchInput').on('input', function() {
-            var searchText = $(this).val().toLowerCase();
-            $('.customtable tr').each(function() {
-                var rowData = $(this).text().toLowerCase();
-                if (rowData.indexOf(searchText) === -1) {
-                    $(this).hide();
-                } else {
-                    $(this).show();
-                }
-            });
-        });
+        $('#searchButton').on('click', function() {
+            var searchText = $('#searchInput').val().toLowerCase();
+            var startDate = $('#startDatePicker').val();
+            var endDate = $('#endDatePicker').val();
+            if (startDate && endDate) {
+                // Format the dates to match the server's expected format (YYYY-MM-DD)
+                var formattedStartDate = formatDate(startDate);
+                var formattedEndDate = formatDate(endDate);
 
-        $('#datePicker').on('change', function() {
-            var selectedDate = $(this).val();
-            // Format the selected date to match the server's expected format (YYYY-MM-DD)
-            var formattedDate = formatDate(selectedDate);
-            // Hide all table rows
-            $('.customtable tr').hide();
-            // Show table rows with matching date
-            $('.customtable tr').each(function() {
-                var rowData = $(this).find('td:eq(4)').text(); // Assuming the date is in the 5th column
-                if (rowData === formattedDate) {
-                    $(this).show();
-                }
-            });
+                // Hide all table rows
+                $('.customtable tr').hide();
+
+                // Show table rows that match the search text and dates within the range
+                $('.customtable tr').each(function() {
+                    var rowDate = $(this).find('td:eq(4)').text(); // Assuming the date is in the 5th column
+                    var rowData = $(this).text().toLowerCase();
+                    if (rowDate >= formattedStartDate && rowDate <= formattedEndDate && rowData.indexOf(searchText) !== -1) {
+                        $(this).show();
+                    }
+                });
+            }
         });
 
         // Function to format date (MM/DD/YYYY to YYYY-MM-DD)

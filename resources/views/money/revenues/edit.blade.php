@@ -30,4 +30,14 @@
 
         @include('js.edit')
 
+        <script>
+                $(document).ready(function() {
+
+                $('#representativesDropdown').change(function() {
+                // Fill hidden input with product_id
+                $('input[name="representative_id"]').val($(this).val());
+                });
+            });
+        </script>
+
 @endsection

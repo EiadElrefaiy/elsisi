@@ -12,8 +12,9 @@ class OfferItem extends Model
     protected $fillable = [
         'price',
         'quantity',
-        'offer_id', // Foreign key included in fillable
-        'product_id', // Foreign key included in fillable
+        'offer_id',
+        'product_id',
+        'notes',
     ];
 
     // Define the relationship with the Offer model

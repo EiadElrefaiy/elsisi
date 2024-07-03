@@ -17,7 +17,7 @@
 
               @if(auth()->check())
                   @if(auth()->user()->image)
-                      <img src="{{ Storage::url('public/' . auth()->user()->image) }}" alt="User Picture">
+                      <img src="{{ asset(auth()->user()->image) }}" alt="User Picture">
                   @else
                       <img src="{{ asset('assets/images/businessman.png') }}" alt="User Picture">
                   @endif
@@ -142,7 +142,6 @@
               </li>
               @endif
 
-              @if(auth()->check() && auth()->user()->position == 1 || Auth::guard('representative')->check())
               <li class="sidebar-item">
                 <a
                   class="sidebar-link waves-effect waves-dark sidebar-link"
@@ -152,7 +151,6 @@
                   ><span class="hide-menu">الحسابات</span></a
                 >
               </li>
-              @endif
 
 
             </ul>
@@ -181,9 +179,18 @@
                  </a>
               </li>
               <li class="sidebar-item text-center">
-                <a style="padding: 1px;" href="{{ route('edit', ['table' => 'users', 'view' => 'management.edit']) }}" aria-expanded="false">
+              <a style="padding: 1px;" href="{{ route('edit', ['view' => auth()->check() ? 'management.edit' : 'representatives.edit' , 'table' => auth()->check() ? 'users' : 'representatives' , 'id' => auth()->check() ? auth()->user()->id : Auth::guard('representative')->user()->id ]) }}" aria-expanded="false">
                   <div class="admin-picture">
-                    <img src="../assets/images/businessman.png" alt="Admin Picture">
+                  @if(auth()->check())
+                  @if(auth()->user()->image)
+                      <img src="{{ asset(auth()->user()->image) }}" alt="User Picture">
+                  @else
+                      <img src="{{ asset('assets/images/businessman.png') }}" alt="User Picture">
+                  @endif
+                
+                @else
+                <img src="{{ asset('assets/images/businessman.png') }}" alt="User Picture">
+              @endif
                   </div>
                 </a>
                 <p class="admin-role" style="color: #a4a7ac;">المشرف</p>

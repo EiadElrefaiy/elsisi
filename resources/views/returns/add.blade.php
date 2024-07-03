@@ -58,7 +58,7 @@
 
                           if (response.data && response.data.items && response.data.items.length > 0) {
                               $.each(response.data.items, function(index, item) {
-                                dropdown.append('<option value="' + item.product_id + '" data-price="' + item.product.price + '">' + item.product.name + '</option>');
+                                dropdown.append('<option value="' + item.product_id + '" data-price="' + (item.product.price ? item.product.price : 0)  + '">' + item.product.name + '</option>');
                               });
 
                               // Fill hidden input with offer_id

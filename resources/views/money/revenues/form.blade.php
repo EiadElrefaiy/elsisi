@@ -12,6 +12,32 @@
                                 />
                             @endif
 
+                            @if(!Auth::guard('representative')->check())
+                            <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label
+                                            for="lname"
+                                            class="col-sm-3 text-end control-label col-form-label">صاحب الاجراء</label>
+                                        <div class="col-md-9">
+                                          <select
+                                            id="representativesDropdown"
+                                            class="select2 form-select shadow-none"
+                                            style="width: 100%; height: 36px">
+                                            <option>صاحب الاجراء</option>
+                                            <option value="0" {{ (isset($data) && $data->representative_id == 0) ? 'selected' : '' }}>الادارة</option>
+                                            @foreach ( Auth::guard('representative')->check() ? $withData->where('id' , Auth::guard('representative')->user()->id) : $withData as $item)
+                                            <option value="{{ $item->id }}" {{ (isset($data) && $data->representative && $data->representative->name == $item->name) ? 'selected' : '' }}>مندوب: {{ $item->name }}</option>
+                                            @endforeach
+                                            </select>
+                                            <input class="hide" name="representative_id" type="text" value="{{ ( isset($data) && $data->representative) ? $data->representative_id : '' }}"/>
+                                        </div>
+                                      </div> 
+                                </div>
+                            @else
+                            <input class="hide" name="representative_id" value="{{ ( isset($data) && $data->representative) ? $data->representative_id : '' }}" />
+                            @endif
+
+
                                 <div class="col-md-4">
                                     <div class="form-group row">
                                         <label
@@ -76,7 +102,6 @@
                                         </div>                       
                                   </div>
 
-                                  <input class="hide" name="representative_id" value="{{ Auth::guard('representative')->check() ? Auth::guard('representative')->user()->id : (isset($data) ? $data->representative_id : '0') }}" />
                                   <input class="hide" name="operation" value="revenue" />
 
                             </div>

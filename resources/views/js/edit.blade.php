@@ -56,12 +56,14 @@
                                 const labelCell = row.querySelector('.label_name');
                                 const priceCell = row.querySelector('.price');
                                 const quantityCell = row.querySelector('.quantity');
+                                const notesCell = row.querySelector('.note');
                                 if (labelCell && priceCell) {
 
                                     const id = idCell.textContent;
                                     const label = labelCell.textContent;
                                     const price = priceCell.textContent;
                                     const quantity = quantityCell.textContent;
+                                    const notes = notesCell.value;
                                     var offer_id = document.getElementById('id').value;
 
                                     const formData_items = new FormData();
@@ -70,6 +72,8 @@
                                     formData_items.append('offer_id', offer_id);
                                     formData_items.append('price', price);
                                     formData_items.append('quantity', quantity);
+                                    formData_items.append('notes', notes);
+
 
                                     $.ajax({
                                     url: '{{ route("create") }}', 
@@ -134,22 +138,25 @@
                             tableRows.forEach(row => {
                                 const idCell = row.querySelector('.id');
                                 const labelCell = row.querySelector('.label_name');
-                                const priceCell = row.querySelector('.price');
                                 const quantityCell = row.querySelector('.quantity');
-                                if (labelCell && priceCell) {
+                                const notesCell = row.querySelector('.note');
 
+                                if (labelCell) {
                                     const id = idCell.textContent;
                                     const label = labelCell.textContent;
-                                    const price = priceCell.textContent;
                                     const quantity = quantityCell.textContent;
+                                    const notes = notesCell.value;
                                     var invoice_id = document.getElementById('id').value;
 
                                     const formData_items = new FormData();
+                                    
                                     formData_items.append('table', 'invoice_items');
                                     formData_items.append('product_id', id);
                                     formData_items.append('invoice_id', invoice_id);
-                                    formData_items.append('price', price);
+                                    formData_items.append('price', 0);
                                     formData_items.append('quantity', quantity);
+                                    formData_items.append('notes', notes);
+
 
                                     $.ajax({
                                     url: '{{ route("create") }}', 

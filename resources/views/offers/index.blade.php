@@ -176,10 +176,10 @@
             <tr id="dataRow_{{ $item['id'] }}">
                 <td>{{ $item->offer_num}}</td>
 
-                <td class="hide">{{ $item->client->name }}</td>
-                <td class="hide">{{ $item->client->phone }}</td>
-                <td class="hide">{{ $item->client->state}}</td>
-                <td class="hide">{{ $item->client->address }}</td>
+                <td class="hide">{{ $item->client ? $item->client->name : 'لا يوجد' }}</td>
+                <td class="hide">{{ $item->client ? $item->client->phone : 'لا يوجد'}}</td>
+                <td class="hide">{{ $item->client ? $item->client->state : 'لا يوجد'}}</td>
+                <td class="hide">{{ $item->client ? $item->client->address : 'لا يوجد'}}</td>
                 <td class="hide">{{ $item->notes == null ? '................' : $item->notes}}</td>
                 <td class="date-cell hide">{{ $item->created_at->format('Y-m-d') }}</td>
                 <td class="hide">

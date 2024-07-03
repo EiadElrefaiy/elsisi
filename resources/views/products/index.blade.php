@@ -39,7 +39,7 @@
                         @foreach ($data as $item)
                         <tr id="dataRow_{{ $item->id }}">
                             <td>{{ $item->name }}</td>
-                            <td>{{ $item->price }} ج</td>
+                            <td>{{ $item->price ? $item->price . ' ج' : 'لم يحدد' }}</td>
                             <td>{{ $item->quantity }}</td>
                             <td>
                                 <a style="color: #3e5569;" href="{{ route('edit', ['view' => 'products.edit','table' => 'products' , 'id' => $item->id]) }}"><i class="mdi mdi-grease-pencil"></i></a>&nbsp;&nbsp;

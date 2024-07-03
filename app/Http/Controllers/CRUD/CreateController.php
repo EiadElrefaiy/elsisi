@@ -37,6 +37,18 @@ class CreateController extends Controller
         return view($view, compact('withData' , 'withData2'));
     }
 
+        if($view == "money.expenses.add" || $view == "money.revenues.add"){
+        
+        // Determine the model class based on the table name
+        $modelClass = $this->getModelClass("representatives");
+    
+        if ($modelClass) {
+        // Eager load relationships based on the model class
+        $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+        }
+        return view($view, compact('withData'));
+    }
+
         if($view == "offers.add"){
         
         // Determine the model class based on the table name
@@ -124,7 +136,7 @@ public function create(Request $request)
         $rules['name'] = ['required', 'string', 'max:255'];
     }
     if ($request->has('phone')) {
-        $rules['phone'] = ['required', 'string', 'min:11', 'max:11', 'unique:' . $table];
+        $rules['phone'] = ['required', 'string', 'min:11', 'unique:' . $table];
     }
     if ($request->has('address')) {
         $rules['address'] = ['required', 'string'];
@@ -154,9 +166,6 @@ public function create(Request $request)
     if ($request->has('line')) {
         $rules['line'] = ['required', 'string'];
     }
-    if ($request->has('price')) {
-        $rules['price'] = ['required'];
-    }
     if ($request->has('description')) {
         $rules['description'] = ['required'];
     }
@@ -172,7 +181,6 @@ public function create(Request $request)
         'name.max' => 'الاسم لا يمكن أن يتجاوز 255 حرفًا.',
         'phone.required' => 'رقم التليفون مطلوب.',
         'phone.string' => 'رقم التليفون يجب أن يكون نصًا.',
-        'phone.max' => 'رقم التليفون لا يمكن أن يتجاوز 11 رقما.',
         'phone.min' => 'رقم التليفون لا يمكن أن يقل عن 11 رقما.',
         'phone.unique' => 'رقم التليفون مسجل مسبقًا.',
         'password.required' => 'كلمة السر مطلوبة.',
@@ -191,7 +199,6 @@ public function create(Request $request)
         'representative_id.required' => 'المندوب مطلوب.',
         'line.required' => 'خط السير مطلوب.',
         'line.string' => 'خط السير يجب أن يكون نصًا.',
-        'price.required' => 'السعر مطلوب.',
         'quantity.required' => 'الكمية مطلوبة.',
         'description.required' => 'الوصف مطلوب.',
         'offer_id.not_in' => 'رقم العرض مطلوب.',
@@ -218,17 +225,25 @@ public function create(Request $request)
         $requestData['password'] = Hash::make($requestData['password']);
     }
 
-    // Check if the request contains a file named 'image'
-    if ($request->hasFile('image')) {
-        // Generate a unique filename based on current time and file extension
-        $fileName = time() . '.' . $request->file('image')->extension();
+        // Check if the request contains a file named 'image'
+        if ($request->hasFile('image')) {
+            // Generate a unique filename based on current time and file extension
+            $fileName = time() . '.' . $request->file('image')->extension();
 
-        // Store the uploaded file in the 'public/images/sections' directory with the generated filename
-        $request->file('image')->storeAs('public/images/' . $table, $fileName);
+            // Define the destination path in the public directory
+            $destinationPath = public_path('images/' . $table);
 
-        // Merge the filename with request data
-        $requestData['image'] = 'images/' . $table . '/' . $fileName;
-    }
+            // Ensure the destination directory exists
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+
+            // Move the uploaded file to the 'public/images/sections' directory with the generated filename
+            $request->file('image')->move($destinationPath, $fileName);
+
+            // Merge the filename with request data
+            $requestData['image'] = 'images/' . $table . '/' . $fileName;
+        }
 
         // Format created_at and updated_at fields
         $created_at = $request->has('created_at') ? Carbon::createFromFormat('m/d/Y', $request->input('created_at'))->format('Y-m-d H:i:s') : now();
@@ -239,6 +254,7 @@ public function create(Request $request)
 
     unset($requestData['table']);
     unset($requestData['password_confirmation']);
+
 
     // Insert data into database using DB facade
     $record = DB::table($table)->insert($requestData);

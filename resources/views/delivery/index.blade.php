@@ -106,7 +106,7 @@
                                                 <td>{{ $item->line }}</td>
                                                 <td>{{ $item->offer ? $item->offer->total : 0 }} ج</td>
                                                 <td>{{ $item->price }} ج</td>
-                                                <td>{{ ($item->offer ? $item->offer->total : 'لا يوجد') + $item->price }} ج</td>
+                                                <td>{{ ($item->offer ? $item->offer->total : 0) + $item->price }} ج</td>
 
                                                 <td>
                                                   @if($item->offer)

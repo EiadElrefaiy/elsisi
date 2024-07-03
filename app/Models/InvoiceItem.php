@@ -14,6 +14,7 @@ class InvoiceItem extends Model
         'product_id',
         'price',
         'quantity',
+        'notes',
     ];
 
     // Define the relationship with the Invoice model

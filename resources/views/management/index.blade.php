@@ -19,7 +19,7 @@
                             <input id="searchInput" type="text" class="form-control" placeholder="بحث" aria-label="Recipient 's username" aria-describedby="basic-addon2" />
                         </div>
                     </div>
-                    <div class="col-6 mt-2" dir="ltr">
+                    <div class="col-6 mt-2 {{ auth()->user() && auth()->user()->position != 1 ? 'hide' : ''}}" dir="ltr">
                         <a href="{{ route('add', ['view' => 'management.add']) }}" style="padding: 3px 15px;" type="button" class="btn btn-success text-white ">
                             اضافة مشرف &nbsp;<i class="mdi mdi-account-plus font-18"></i>
                         </a>
@@ -42,7 +42,7 @@
                         <tr id="dataRow_{{ $item['id'] }}">
                             <td>
                                 @if(isset($item['image']) && $item['image'])
-                                <img src="{{ Storage::url('public/' . $item['image']) }}" alt="user" width="70" height="70" class="rounded-circle" />
+                                <img src="{{ asset($item->image) }}" alt="user" width="70" height="70" class="rounded-circle" />
                                 @else
                                 <img src="{{ URL::asset('assets/images/businessman.png') }}" alt="default user" width="70" height="70" class="rounded-circle" />
                                 @endif

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\ModelHelperTrait;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class UpdateController extends Controller
 {
@@ -76,6 +77,18 @@ class UpdateController extends Controller
                 return view($view, compact('data' , 'withData' , 'withData2'));  
             }
 
+            if($view == "money.expenses.edit" || $view == "money.revenues.edit"){
+        
+                // Determine the model class based on the table name
+                $modelClass = $this->getModelClass("representatives");
+            
+                if ($modelClass) {
+                // Eager load relationships based on the model class
+                $withData = $modelClass::with($this->getRelationships($modelClass))->get();
+                }
+                return view($view, compact('data' , 'withData'));
+            }
+        
             if($view == "procedures.discounts.edit" || $view == "procedures.rewards.edit"){
         
                 // Determine the model class based on the table name
@@ -139,12 +152,22 @@ class UpdateController extends Controller
         // Initialize validation rules array
         $rules = [];
 
-        // Add rules conditionally based on the existence of the fields in the request
         if ($request->has('name')) {
             $rules['name'] = ['required', 'string', 'max:255'];
         }
         if ($request->has('phone')) {
-            $rules['phone'] = ['required', 'string', 'max:15'];
+            $rules['phone'] = [
+                'required',
+                'string',
+                'min:11',
+                Rule::unique($table)->ignore($data->id)
+            ];
+        }
+                if ($request->has('address')) {
+            $rules['address'] = ['required', 'string'];
+        }
+        if ($request->has('salary')) {
+            $rules['salary'] = ['required'];
         }
         if ($request->has('password')) {
             $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
@@ -153,7 +176,60 @@ class UpdateController extends Controller
         if ($request->hasFile('image')) {
             $rules['image'] = ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'];
         }
-
+        if ($request->has('offer_id')) {
+            $rules['offer_id'] = ['required'];
+        }
+        if ($request->has('product_id')) {
+            $rules['product_id'] = ['required'];
+        }
+        if ($request->has('employee_id')) {
+            $rules['employee_id'] = ['required'];
+        }
+        if ($request->has('representative_id')) {
+            $rules['representative_id'] = ['required'];
+        }
+        if ($request->has('line')) {
+            $rules['line'] = ['required', 'string'];
+        }
+        if ($request->has('description')) {
+            $rules['description'] = ['required'];
+        }
+        if ($request->has('quantity')) {
+            $rules['quantity'] = ['required'];
+        }
+    
+        $messages = [
+            'name.required' => 'الاسم مطلوب.',
+            'address.required' => 'العنوان مطلوب.',
+            'salary.required' => 'الراتب مطلوب.',
+            'name.string' => 'الاسم يجب أن يكون نصًا.',
+            'name.max' => 'الاسم لا يمكن أن يتجاوز 255 حرفًا.',
+            'phone.required' => 'رقم التليفون مطلوب.',
+            'phone.string' => 'رقم التليفون يجب أن يكون نصًا.',
+            'phone.min' => 'رقم التليفون لا يمكن أن يقل عن 11 رقما.',
+            'phone.unique' => 'رقم التليفون مسجل مسبقًا.',
+            'password.required' => 'كلمة السر مطلوبة.',
+            'password.string' => 'كلمة السر يجب أن تكون نصًا.',
+            'password.min' => 'كلمة السر يجب أن تكون على الأقل 8 أحرف.',
+            'password.confirmed' => 'كلمة السر وتأكيد كلمة السر غير متطابقين.',
+            'password_confirmation.required' => 'تأكيد كلمة السر مطلوب.',
+            'password_confirmation.string' => 'تأكيد كلمة السر يجب أن يكون نصًا.',
+            'password_confirmation.min' => 'تأكيد كلمة السر يجب أن تكون على الأقل 8 أحرف.',
+            'image.image' => 'الملف يجب أن يكون صورة.',
+            'image.mimes' => 'الصورة يجب أن تكون بامتداد: jpeg, png, jpg, gif, svg.',
+            'image.max' => 'الصورة لا يمكن أن تتجاوز 2 ميغابايت.',
+            'offer_id.required' => 'رقم العرض مطلوب.',
+            'product_id.required' => 'رقم العرض مطلوب.',
+            'employee_id.required' => 'رقم الموظف مطلوب.',
+            'representative_id.required' => 'المندوب مطلوب.',
+            'line.required' => 'خط السير مطلوب.',
+            'line.string' => 'خط السير يجب أن يكون نصًا.',
+            'quantity.required' => 'الكمية مطلوبة.',
+            'description.required' => 'الوصف مطلوب.',
+            'offer_id.not_in' => 'رقم العرض مطلوب.',
+            'representative_id.not_in' => 'المندوب مطلوب.',
+        ];
+    
         // Create a validator instance and validate the request
         $validator = Validator::make($request->all(), $rules);
 
@@ -170,7 +246,7 @@ class UpdateController extends Controller
         // Merge the filename with request data
         $requestData = $request->all();
 
-        if (isset($requestData['password'])) {
+        if ($requestData['table'] == 'users') {
             $requestData['password'] = Hash::make($requestData['password']);
         }
 
@@ -178,7 +254,7 @@ class UpdateController extends Controller
         if ($request->hasFile('image')) {
             // Check if there is an existing image and delete it
             if ($data && $data->image) {
-                $existingImagePath = storage_path('app/public/' . $data->image);
+                $existingImagePath = public_path($data->image);
                 if (file_exists($existingImagePath)) {
                     unlink($existingImagePath);
                 }
@@ -187,8 +263,16 @@ class UpdateController extends Controller
             // Generate a unique filename based on current time and file extension
             $fileName = time() . '.' . $request->file('image')->extension();
 
-            // Store the uploaded file in the 'public/images/sections' directory with the generated filename
-            $request->file('image')->storeAs('public/images/' . $table, $fileName);
+            // Define the destination path in the public directory
+            $destinationPath = public_path('images/' . $table);
+
+            // Ensure the destination directory exists
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+
+            // Move the uploaded file to the 'public/images/sections' directory with the generated filename
+            $request->file('image')->move($destinationPath, $fileName);
 
             // Merge the filename with request data
             $requestData = array_merge($request->all(), ['image' => 'images/' . $table . '/' . $fileName]);

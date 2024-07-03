@@ -5,9 +5,9 @@
         <div class="card">
             <h3 class="card-title m-3">صورة</h3>
                 <div class="admin-picture" style="width: 200px; height: 200px;">
-                    <div class="edit-admin-image">
-                    <img id="adminImage" src="{{ isset($data) && isset($data->image) ? Storage::url('public/' . $data->image) : URL::asset('assets/images/businessman.png') }}" alt="Admin Picture">
-                    </div>
+                  <div class="edit-admin-image">
+                    <img id="adminImage" src="{{ isset($data) && isset($data->image) ? asset($data->image) : URL::asset('assets/images/businessman.png') }}" alt="Admin Picture">
+                  </div>
                 </div>
                 <span style="position: relative; bottom: 45px; left:60px;" class="text-center">
                 <a href="#">

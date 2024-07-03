@@ -43,7 +43,7 @@
                                         type="text"
                                         class="form-control"
                                         id="lname"
-                                        placeholder="السعر"
+                                        placeholder="السعر(اختياري)"
                                         />
                                     </div>
                                    </div>

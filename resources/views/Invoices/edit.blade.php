@@ -70,46 +70,31 @@
                                     </div> 
                                 </div>
                            
-                               <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label
-                                        for="lname"
-                                        class="col-sm-3 text-end control-label col-form-label">حالة العرض</label>
-                                    <div class="col-md-9">
-                                      <select
-                                        id="stateSelect"
-                                        class="select2 form-select shadow-none"
-                                        style="width: 100%; height: 36px">
-                                        <option value="0" {{ (isset($data) && $data->state == 0) ? 'selected' : '' }}>متبقي له</option>
-                                        <option value="2" {{ (isset($data) && $data->state == 2) ? 'selected' : '' }}>خالص</option>
-                                      </select>
-                                      <input class="hide" id="state" name="state" type="text" value="{{ $data->state }}"/>
-                                    </div>
-                                  </div> 
-                            </div>
 
-                            <div class="col-md-6">
-                                <span style="padding: 5px 15px; font-size: 18px;" class="badge {{ $data->state == 0 ? 'bg-warning' : ($data->state == 1 ? 'bg-success' : '' )}}">
-                                    {{ $data->state == 0 ? 'متبقي له' : ($data->state == 1 ? 'خالص' : '') }}
+                            <div class="col-md-4">
+                                <span style="padding: 5px 15px; font-size: 18px;" class="badge {{ $data->total - $data->payed != 0 ? 'bg-warning' : 'bg-success' }}">
+                                    {{ $data->total - $data->payed != 0 ? 'متبقي له' : 'خالص' }}
                               </span>
                            </div>
 
-                              </div>
-                        </form>
+                            </div>
+                         </form>
                         </div>      
-                    </div>
+                    </div>        
+                  </div>
 
-                            
-                    </div>
-
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                       <div class="card">
                         <form class="form-horizontal">
                               <div class="card-body">
                                 <div class="row">
                                   <h3 class="card-title mb-2">صورة الفاتورة</h3>
                                   <div class="col-md-12 text-center">
-                                    <a href="{{ isset($data) && isset($data->image) ? Storage::url('public/' . $data->image) : URL::asset('/assets/images/bill.png') }}" style="position: relative; right: 30px;"><img id="InvoiceImage" width="200" height="200" src="{{ isset($data) && isset($data->image) ? Storage::url('public/' . $data->image) : URL::asset('/assets/images/bill.png') }}"></a>
+
+                                  
+                                  <a href="{{ isset($data) && isset($data->image) ? asset($data->image) : asset('assets/images/bill.png') }}" style="position: relative; right: 30px;">
+                                      <img id="adminImage" width="200" height="200" src="{{ isset($data) && isset($data->image) ? asset($data->image) : asset('assets/images/bill.png') }}" alt="Invoice Image">
+                                  </a>
                                    
                                     <span style="position: relative; top: 95px; left:170px;" class="text-center">
                                       <a href="#">
@@ -124,7 +109,7 @@
                          </form>
                        </div>
 
-                       <div class="col-md-6">
+                       <div class="col-md-12">
                       <div class="card">
                         <form class="form-horizontal">
                           <div class="card-body">
@@ -132,23 +117,6 @@
                                   <div class="col-sm-8">
                                     <h3 class="card-title mb-2">اصناف المخزن</h3>
                                   </div>
-                                  <div class="col-sm-4">
-                                    <div class="input-group">
-                                      <div class="input-group-append">
-                                        <span class="input-group-text" style="padding: 9.5px;" id="basic-addon2"
-                                          ><i class=" fas fa-search"></i></span>
-                                      </div>
-                                      <input
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="بحث"
-                                        aria-label="Recipient 's username"
-                                        aria-describedby="basic-addon2"
-                                      />
-                                    </div>    
-                    
-                                  </div>
-                                </div>
 
                                 <div class="form-group row">
                                   @foreach ($withData2 as $index => $item)
@@ -187,21 +155,19 @@
                                                   <table class="table" id="invoiceTable">
                                                       <thead class="thead-light">
                                                           <tr>
-                                                              <th scope="col">الصنف</th>
+                                                          <th scope="col">الصنف</th>
                                                               <th scope="col"></th>
                                                               <th scope="col">العدد</th>
                                                               <th scope="col"></th>
-                                                              <th scope="col">السعر</th>
-                                                              <th scope="col">الاجمالي</th>
                                                               <th scope="col"></th>
                                                           </tr>
                                                       </thead>
 
                                                       <tbody class="customtable">
                                                       @foreach ($data->items as $item)
-                                                        <tr data-label="{{ $item->product->name }}">
+                                                        <tr data-label="{{ $item->product ? $item->product->name : 'غير موجود' }}">
                                                             <td class="hide id">{{ $item->product_id }}</td>
-                                                            <td class="label_name">{{ $item->invoice->name }}</td>
+                                                            <td class="label_name">{{ $item->product ? $item->product->name : 'غير موجود' }}</td>
                                                             <td class="button-cell">
                                                                 <button type="button" class="quantity-button" onclick="increment(this)">+</button>
                                                             </td>
@@ -211,17 +177,13 @@
                                                             <td class="button-cell">
                                                                 <button type="button" class="quantity-button" onclick="decrement(this)">-</button>
                                                             </td>
-                                                            <td class="price">{{ $item->price }}</td>
-                                                            <td class="total">{{ $item->price * $item->quantity }}</td>
-                                                            <td></td>
+                                                            @if($item->product_id == 12 || $item->product_id == 9 || $item->product_id == 7)
+                                                            <td> <input value="{{ $item->notes }}" style="width:150px;" type="text" class="form-control note" name="notes" placeholder="ملاحظة يدوية"/></td>
+                                                            @else
+                                                            <td> <input value="{{ $item->notes }}" style="width:150px;visibility:hidden;" type="text" class="form-control note" name="notes" placeholder="ملاحظة يدوية"/></td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
-                                                    <tr id="data_base_total">
-                                                    <td colspan="5">اجمالي الفاتورة</td>
-                                                    <td>{{$data->total}}</td>
-                                                    <td></td>
-                                                    </tr>
-                                                        <!-- Additional rows will be added here dynamically -->
                                                     </tbody>
 
                                                   </table>
@@ -239,12 +201,29 @@
                             <form class="form-horizontal">
                                <div class="card-body">
                            <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                              <label
+                                  for="lname"
+                                  class="col-sm-3 text-end control-label col-form-label">سعر الطلب</label>
+                              <div class="col-sm-3">
+                                  <input
+                                  type="text"
+                                  class="form-control"
+                                  id="total_form"
+                                  name="total_form"
+                                  placeholder="المدفوع"
+                                  value="{{$data->total}}"
+                                  />
+                              </div>
+                          </div>                   
+                        </div>
+                        <div class="col-md-12">
                             <div class="form-group row">
                               <label
                                   for="lname"
                                   class="col-sm-3 text-end control-label col-form-label">المدفوع</label>
-                              <div class="col-sm-9">
+                              <div class="col-sm-3">
                                   <input
                                   type="text"
                                   class="form-control"
@@ -252,6 +231,24 @@
                                   name="payed_form"
                                   placeholder="المدفوع"
                                   value="{{$data->payed}}"
+                                  />
+                              </div>
+                          </div>                   
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                              <label
+                                  for="lname"
+                                  class="col-sm-3 text-end control-label col-form-label">المتبقي</label>
+                              <div class="col-sm-3">
+                                  <input
+                                  disabled
+                                  type="text"
+                                  class="form-control"
+                                  id="payed_form"
+                                  name="payed_form"
+                                  placeholder="المتبقي"
+                                  value="{{$data->total - $data->payed}}"
                                   />
                               </div>
                           </div>                   
@@ -314,7 +311,7 @@
                   const price = parseFloat(this.getAttribute('data-price'));
 
                   if (this.checked) {
-                      addItemToTable(name, price , id);
+                      addItemToTable(name, 0 , id);
                   } else {
                       removeItemFromTable(name);
                   }
@@ -327,7 +324,7 @@
               const row = document.createElement('tr');
               row.setAttribute('data-label', label);
               row.innerHTML = `
-                  <td class="hide id">${id}</td>
+              <td class="hide id">${id}</td>
                   <td class="label_name">${label}</td>
                   <td class="button-cell">
                       <button type="button" class="quantity-button" onclick="increment(this)">+</button>
@@ -338,10 +335,7 @@
                   <td class="button-cell">
                       <button type="button" class="quantity-button" onclick="decrement(this)">-</button>
                   </td>
-                  <td class="price">${price}</td>
-                  <td class="total">${price}</td>
-                  
-                  <td></td>
+                  <td> <input style="width:150px;" type="text" class="form-control note" name="notes" placeholder="ملاحظة يدوية"/></td>
               `;
               table.appendChild(row);
           }
@@ -383,27 +377,6 @@
               row.querySelector('.total').textContent = total;
           }
 
-          function updateTotal() {
-              const table = document.querySelector('#invoiceTable tbody');
-              let total = 0;
-              table.querySelectorAll('.total').forEach(totalCell => {
-                  total += parseFloat(totalCell.textContent);
-              });
-              $("#data_base_total").hide();
-              const totalRow = document.createElement('tr');
-              totalRow.innerHTML = `
-                  <td colspan="5">اجمالي الفاتورة</td>
-                  <td>${total}</td>
-                  <td></td>
-              `;
-              document.getElementById("total").value = total;
-              const existingTotalRow = table.querySelector('tr.total-row');
-              if (existingTotalRow) {
-                  table.removeChild(existingTotalRow);
-              }
-              totalRow.classList.add('total-row');
-              table.appendChild(totalRow);
-          }
       </script>
 
 @endsection
